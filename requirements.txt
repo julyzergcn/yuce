@@ -1,0 +1,7 @@
+Django
+South
+dj-database-url
+django-endless-pagination
+django-extensions
+django-reset
+gunicorn
