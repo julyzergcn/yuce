@@ -5,3 +5,4 @@ django-endless-pagination
 django-extensions
 django-reset
 gunicorn
+django-bootstrap-form

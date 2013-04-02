@@ -1,6 +1,7 @@
 
 from os.path import dirname, join, abspath
 
+
 ROOT = dirname(abspath(__file__))
 
 AUTH_USER_MODEL = 'core.User'
@@ -107,6 +108,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'south',
+    'bootstrapform',
+    'registration',
     'core',
 )
 
