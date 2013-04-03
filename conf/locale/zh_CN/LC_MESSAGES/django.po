@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-03 22:01+0800\n"
+"POT-Creation-Date: 2013-04-03 23:26+0800\n"
 "PO-Revision-Date: 2008-03-20 23:22+0800\n"
 "Last-Translator: hutuworm <hutuworm@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,6 +100,14 @@ msgstr "注册信息"
 msgid "registration profiles"
 msgstr "注册信息"
 
+#: .\yuce\settings.py:48
+msgid "English"
+msgstr "英语"
+
+#: .\yuce\settings.py:49
+msgid "Simplified Chinese"
+msgstr "简体中文"
+
 #: .\yuce\templates\base.html.py:24
 msgid "Home"
 msgstr "首页"
@@ -109,23 +117,27 @@ msgid "Logout"
 msgstr "登出"
 
 #: .\yuce\templates\base.html.py:29
-#: .\yuce\templates\registration\login.html.py:8
-#: .\yuce\templates\registration\login.html.py:10
+#: .\yuce\templates\registration\login.html.py:15
+#: .\yuce\templates\registration\login.html.py:17
 #: .\yuce\templates\registration\registration_complete.html.py:6
 msgid "Log in"
 msgstr "登陆"
 
 #: .\yuce\templates\base.html.py:30
-#: .\yuce\templates\registration\registration_form.html.py:8
-#: .\yuce\templates\registration\registration_form.html.py:10
+#: .\yuce\templates\registration\registration_form.html.py:15
+#: .\yuce\templates\registration\registration_form.html.py:17
 msgid "Sign up"
 msgstr "注册"
 
-#: .\yuce\templates\base.html.py:47
+#: .\yuce\templates\base.html.py:34
+msgid "Language"
+msgstr "语言"
+
+#: .\yuce\templates\base.html.py:61
 msgid "About"
 msgstr "关于我们"
 
-#: .\yuce\templates\base.html.py:47
+#: .\yuce\templates\base.html.py:61
 msgid "Contact"
 msgstr "联系我们"
 
@@ -136,7 +148,7 @@ msgstr ""
 
 #: .\yuce\templates\registration\logout.html.py:6
 msgid "Log in again"
-msgstr ""
+msgstr "重新登陆"
 
 #~ msgid "email address"
 #~ msgstr "Email 地址"
