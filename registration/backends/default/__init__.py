@@ -3,7 +3,7 @@ from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 
 from registration import signals
-from registration.forms import RegistrationForm
+from registration.forms import MyRegistrationForm
 from registration.models import RegistrationProfile
 
 
@@ -120,7 +120,7 @@ class DefaultBackend(object):
         Return the default form class used for user registration.
         
         """
-        return RegistrationForm
+        return MyRegistrationForm
 
     def post_registration_redirect(self, request, user):
         """

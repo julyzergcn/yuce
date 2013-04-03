@@ -1,8 +1,11 @@
 Django
 South
-dj-database-url
+Pillow
 django-endless-pagination
 django-extensions
+django-bootstrap-form
+django-simple-captcha
+
+dj-database-url
 django-reset
 gunicorn
-django-bootstrap-form

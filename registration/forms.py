@@ -6,6 +6,7 @@ Forms and validation code for user registration.
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from captcha.fields import CaptchaField
 
 from registration.models import User
 
@@ -121,3 +122,9 @@ class RegistrationFormNoFreeEmail(RegistrationForm):
         if email_domain in self.bad_domains:
             raise forms.ValidationError(_("Registration using free email addresses is prohibited. Please supply a different email address."))
         return self.cleaned_data['email']
+
+class CaptchaMixin(forms.Form):
+    captcha = CaptchaField(label=_('Captcha'))
+
+class MyRegistrationForm(RegistrationFormUniqueEmail, CaptchaMixin, RegistrationFormTermsOfService):
+    pass
