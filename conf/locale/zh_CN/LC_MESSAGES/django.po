@@ -1,0 +1,148 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-03 22:01+0800\n"
+"PO-Revision-Date: 2008-03-20 23:22+0800\n"
+"Last-Translator: hutuworm <hutuworm@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\core\models.py:18
+msgid "last login ip"
+msgstr "最后一次登陆IP"
+
+#: .\registration\admin.py:23
+msgid "Activate users"
+msgstr "活跃用户"
+
+#: .\registration\admin.py:43
+#, fuzzy
+msgid "Re-send activation emails"
+msgstr "激活密钥"
+
+#: .\registration\forms.py:36
+#, fuzzy
+msgid "Username"
+msgstr "用户名"
+
+#: .\registration\forms.py:37
+#, fuzzy
+msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
+msgstr "用户名只能包含字母、数字和下划线"
+
+#: .\registration\forms.py:40
+msgid "E-mail"
+msgstr ""
+
+#: .\registration\forms.py:42
+#, fuzzy
+msgid "Password"
+msgstr "密码"
+
+#: .\registration\forms.py:44
+#, fuzzy
+msgid "Password (again)"
+msgstr "密码（重复）"
+
+#: .\registration\forms.py:54
+msgid "A user with that username already exists."
+msgstr "用户名已经被占用"
+
+#: .\registration\forms.py:68
+msgid "The two password fields didn't match."
+msgstr "两个密码不一致"
+
+#: .\registration\forms.py:79
+msgid "I have read and agree to the Terms of Service"
+msgstr "我已阅读并同意该服务条款"
+
+#: .\registration\forms.py:80
+msgid "You must agree to the terms to register"
+msgstr "您必须同意注册条款"
+
+#: .\registration\forms.py:96
+msgid ""
+"This email address is already in use. Please supply a different email "
+"address."
+msgstr "该 Email 地址已有人使用，请提供一个另外的 Email 地址。"
+
+#: .\registration\forms.py:123
+msgid ""
+"Registration using free email addresses is prohibited. Please supply a "
+"different email address."
+msgstr "禁止使用免费 Email 地址注册，请提供一个另外的 Email 地址。"
+
+#: .\registration\forms.py:127
+msgid "Captcha"
+msgstr "验证码"
+
+#: .\registration\models.py:183
+msgid "user"
+msgstr "用户"
+
+#: .\registration\models.py:184
+msgid "activation key"
+msgstr "激活密钥"
+
+#: .\registration\models.py:189
+msgid "registration profile"
+msgstr "注册信息"
+
+#: .\registration\models.py:190
+msgid "registration profiles"
+msgstr "注册信息"
+
+#: .\yuce\templates\base.html.py:24
+msgid "Home"
+msgstr "首页"
+
+#: .\yuce\templates\base.html.py:27
+msgid "Logout"
+msgstr "登出"
+
+#: .\yuce\templates\base.html.py:29
+#: .\yuce\templates\registration\login.html.py:8
+#: .\yuce\templates\registration\login.html.py:10
+#: .\yuce\templates\registration\registration_complete.html.py:6
+msgid "Log in"
+msgstr "登陆"
+
+#: .\yuce\templates\base.html.py:30
+#: .\yuce\templates\registration\registration_form.html.py:8
+#: .\yuce\templates\registration\registration_form.html.py:10
+msgid "Sign up"
+msgstr "注册"
+
+#: .\yuce\templates\base.html.py:47
+msgid "About"
+msgstr "关于我们"
+
+#: .\yuce\templates\base.html.py:47
+msgid "Contact"
+msgstr "联系我们"
+
+#: .\yuce\templates\registration\logout.html.py:5
+#: .\yuce\templates\registration\registration_complete.html.py:5
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr ""
+
+#: .\yuce\templates\registration\logout.html.py:6
+msgid "Log in again"
+msgstr ""
+
+#~ msgid "email address"
+#~ msgstr "Email 地址"
+
+#~ msgid "This username is already taken. Please choose another."
+#~ msgstr "该用户名已被占用，请另选一个。"
+
+#~ msgid "You must type the same password each time"
+#~ msgstr "您必须输入两遍同样的密码"

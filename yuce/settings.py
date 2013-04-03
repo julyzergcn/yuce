@@ -4,6 +4,10 @@ from os.path import dirname, join, abspath
 
 ROOT = dirname(abspath(__file__))
 
+LOCALE_PATHS = (
+    join(dirname(ROOT), 'conf', 'locale'),
+)
+
 AUTH_USER_MODEL = 'core.User'
 
 DEBUG = True
