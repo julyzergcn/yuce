@@ -21,9 +21,18 @@
                 <div class="masthead">
                     <ul class="nav nav-pills pull-right">
                         {% block topnav %}
-                        <li id="home"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+                        <li id="search">
+                            <form method="post" action="{% url 'search' %}">
+                                <input type="text" name="kw" style="width: 100px; height: 15px; margin-bottom: -13px;" placeholder="Search ..." />
+                            </form>
+                        </li>
+                        <li>&nbsp;&nbsp;</li>
+                        <li id="topics"><a href="{% url 'topics' %}">{% trans 'Topics' %}</a></li>
+                        <li id="new_topic"><a href="{% url 'new_topic' %}">{% trans 'New Topic' %}</a></li>
+                        <li id="archived_topics"><a href="{% url 'archived_topics' %}">{% trans 'Archived Topics' %}</a></li>
+                        
                         {% if user.is_authenticated %}
-                            <li id="profile"><a href="#">{{ user.username }}</a></li>
+                            <li id="profile"><a href="{% url 'my_profile' %}">{{ user.username }}</a></li>
                             <li id="logout"><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
                         {% else %}
                             <li id="login"><a href="{% url 'auth_login' %}">{% trans 'Log in' %}</a></li>
@@ -46,7 +55,7 @@
                             </li>
                         {% endblock topnav %}
                     </ul>
-                    <h3 class="muted">Yu Ce</h3>
+                    <h3 class="muted"><a href="{% url 'home' %}">Yu Ce</a></h3>
                 </div>
 
                 <hr>
@@ -59,7 +68,7 @@
                 <hr>
                 
                 <div class="footer">
-                    <p>&copy; Company 2013  &nbsp;&nbsp; <a href="{% url 'about' %}">{% trans 'About' %}</a> &nbsp;&nbsp; <a href="{% url 'contact' %}">{% trans 'Contact' %}</a>
+                    <p>&copy; Company 2013  &nbsp;&nbsp; <a href="{% url 'about' %}">{% trans 'About' %}</a> &nbsp;&nbsp; <a href="{% url 'contact' %}">{% trans 'Contact' %}</a>&nbsp;&nbsp; <a href="{% url 'faq' %}">{% trans 'FAQ' %}</a>
                     </p>
                 </div>
             {% endblock container %}

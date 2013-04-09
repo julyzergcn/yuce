@@ -7,12 +7,16 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+    
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^accounts/profile/$', RedirectView.as_view(url='/')),
-    url(r'^$', 'core.views.index', name='home'),
+    url(r'^accounts/profile/$', RedirectView.as_view(url='/'), name='my_profile'),
+    
     url(r'^about/$', TemplateView.as_view(template_name='about.html'), name='about'),
     url(r'^contact/$', TemplateView.as_view(template_name='contact.html'), name='contact'),
-    url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name='faq'),
+    
+    url(r'^', include('core.urls')),
 )
 
 from django.conf import settings as s
