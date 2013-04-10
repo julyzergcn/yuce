@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django import http
 
 from core.models import *
@@ -15,7 +15,8 @@ def new_topic(request):
     if request.method == 'POST':
         form = TopicCreationForm(request.POST)
         if form.is_valid():
-            print form.cleaned_data
+            form.save(request)
+            return redirect('topics')
     else:
         form = TopicCreationForm()
     context = {
