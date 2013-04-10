@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n bootstrap %}
 
 {% block topnav %}
     {{ block.super }}
@@ -9,5 +9,15 @@
 {% endblock topnav %}
 
 {% block content %}
-new topic
+<form method="post" action="">
+    {{ form|bootstrap }}
+    <input type="submit" value="{% trans 'Submit' %}" class="btn" />
+</form>
 {% endblock content %}
+
+{% block extra_js %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{{ form.media }}
+
+{% endblock %}
