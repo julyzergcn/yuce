@@ -46,6 +46,8 @@ class Activity(models.Model):
 ###################
 
 class Status(models.Model):
+    PENDING = 1
+    OPEN = 2
     short_text = models.CharField(max_length=20)
     text = models.CharField(max_length=20)
     
@@ -66,7 +68,7 @@ class Topic(models.Model):
     subject_english = models.CharField(max_length=200, blank=True)
     content = models.TextField()
     content_english = models.TextField(blank=True)
-    status = models.ForeignKey(Status, default=1)
+    status = models.ForeignKey(Status, default=Status.PENDING)
     tags = models.ManyToManyField(Tag, null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField()
@@ -83,7 +85,7 @@ class Bet(models.Model):
     weight = models.PositiveIntegerField()
     yesno = models.BooleanField()
     created_date = models.DateTimeField(default=timezone.now)
-    status = models.ForeignKey(Status)
+    status = models.ForeignKey(Status, default=Status.OPEN)
     status_date = models.DateTimeField(default=timezone.now)
     
     def __unicode__(self):
