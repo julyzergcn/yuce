@@ -9,3 +9,4 @@ django-simple-captcha
 dj-database-url
 django-reset
 gunicorn
+psycopg2
