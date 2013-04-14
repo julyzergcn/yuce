@@ -1,3 +1,11 @@
+#coding=utf8
+
+TOPIC_START_WEIGHT = 10**5
+TOPIC_END_WEIGHT = 10**4
+TOPIC_POST_COST = 10
+
+DATE_FORMAT = 'n/j/y'
+DATETIME_FORMAT = 'n/j/y H:i'
 
 from os.path import dirname, join, abspath
 
@@ -46,7 +54,7 @@ LANGUAGE_CODE = 'zh-cn'
 gettext_noop = lambda s: s
 LANGUAGES = (
     ('en', gettext_noop('English')),
-    ('zh-cn', gettext_noop('Simplified Chinese')),
+    ('zh-cn', gettext_noop(u'中文')),
 )
 
 SITE_ID = 1
@@ -125,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'django.contrib.admin',
     'south',
     'bootstrapform',

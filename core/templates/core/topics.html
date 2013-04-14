@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block navbar %}
+    {{ block.super }}
+    <script type="text/javascript">
+    document.getElementById('topics').className = 'active';
+    </script>
+{% endblock navbar %}
+
+{% block content %}
+    <ul>
+    {% for topic in topics %}
+        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

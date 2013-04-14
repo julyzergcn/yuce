@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+from core.util import *
+
 
 def update_last_login_ip(sender, request, user, **kwargs):
     '''
@@ -48,6 +50,10 @@ class Activity(models.Model):
 class Status(models.Model):
     PENDING = 1
     OPEN = 2
+    CLOSED = 3
+    COMPLETED = 4
+    CANCELLED = 5
+    REJECTED = 6
     short_text = models.CharField(max_length=20)
     text = models.CharField(max_length=20)
     
@@ -77,7 +83,28 @@ class Topic(models.Model):
     
     def __unicode__(self):
         return self.subject
-
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('topic_detail', [self.id])
+    
+    @classmethod
+    def archived_topics(cls):
+        return cls.objects.filter(status=Status.COMPLETED)
+    
+    @classmethod
+    def active_topics(cls):
+        return cls.objects.filter(status=Status.OPEN)
+    
+    def yes_bet_coins(self):
+        return sum(self.bet_set.filter(yesno=True).values_list('coins', flat=True))
+    
+    def no_bet_coins(self):
+        return sum(self.bet_set.filter(yesno=False).values_list('coins', flat=True))
+    
+    def current_weight(self):
+        return get_current_weight(self)
+    
 class Bet(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)

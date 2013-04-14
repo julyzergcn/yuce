@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block content %}
+    <h3>{{ topic.subject }}</h3>
+    <div>
+        {{ topic.content|linebreaks|safe }}
+    </div>
+    
+    <strong>{% trans 'Coins' %}</strong>:
+    <ul>
+        <li>Yes: {{ topic.yes_bet_coins }}</li>
+        <li>No: {{ topic.no_bet_coins }}</li>
+    </ul>
+    
+    <strong>{% trans 'Tags' %}</strong>:
+    <ul>
+        {% for tag in topic.tags.all %}
+            <li>{{ tag.tag }}</li>
+        {% endfor %}
+    </ul>
+    
+    <div>
+        <strong>{% trans 'Start Date' %}</strong>: {{ topic.created_date }} ( {{ topic.created_date|naturalday }}  {{ topic.created_date|naturaltime }} )<br>
+<br>
+        <strong>{% trans 'End Date' %}</strong>: {{ topic.deadline }} ( {{ topic.deadline|naturalday }}  {{ topic.deadline|naturaltime }} )<br>
+        <strong>{% trans 'Event Close Date' %}</strong>: {{ topic.close_date }} ( {{ topic.close_date|naturalday }}  {{ topic.close_date|naturaltime }} )<br>
+        <strong>{% trans 'Current Weight' %}</strong>: {{ topic.current_weight}}
+    </div>
+    
+    <br>
+    <div>
+        <a href="#" class="btn">Yes</a> &nbsp;&nbsp; <a href="#" class="btn">No</a>
+    </div>
+{% endblock content %}

@@ -118,5 +118,13 @@
         "text": "\u88ab\u64a4\u9500", 
         "short_text": "cancelled"
     }
+},
+{
+    "pk": 6, 
+    "model": "core.status", 
+    "fields": {
+        "text": "\u88ab\u62d2\u7edd", 
+        "short_text": "rejected"
+    }
 }
 ]

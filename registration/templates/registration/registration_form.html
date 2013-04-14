@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load bootstrap %}
+
+{% block content %}
+    <form method="post" action="">
+        {% csrf_token %}
+        <h3>{% trans 'Sign up' %}</h3>
+        {{ form.username|bootstrap}}
+        {{ form.email|bootstrap}}
+        {{ form.password1|bootstrap}}
+        {{ form.password2|bootstrap}}
+        <div class="captcha">
+            <style type="text/css">.captcha input[type="text"] {width:120px}</style>
+            {{ form.captcha|bootstrap}}
+        </div>
+        <textarea readonly="readonly">
+{% trans 'Term Of Service' %}
+...
+        </textarea>
+        {{ form.tos|bootstrap}}
+        <input type="submit" value="{% trans 'Sign up' %}" class="btn" />
+    </form>
+{% endblock content %}
