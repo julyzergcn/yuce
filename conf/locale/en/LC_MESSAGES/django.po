@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-03 23:26+0800\n"
+"POT-Creation-Date: 2013-04-15 22:45+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,164 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: .\core\models.py:18
-msgid "last login ip"
+#: .\core\admin.py:29
+msgid "target"
+msgstr ""
+
+#: .\core\forms.py:32
+msgid "Yes"
+msgstr ""
+
+#: .\core\forms.py:33
+msgid "No"
+msgstr ""
+
+#: .\core\forms.py:54 .\core\forms.py:116 .\core\models.py:122
+msgid "Yes/No"
+msgstr ""
+
+#: .\core\forms.py:65
+msgid "Deadline is not valid"
+msgstr ""
+
+#: .\core\forms.py:67
+msgid "Event close date should be after deadline"
+msgstr ""
+
+#: .\core\forms.py:69 .\core\forms.py:126
+msgid "You donot have enough score to bet"
+msgstr ""
+
+#: .\core\models.py:14 .\core\models.py:120
+msgid "score"
+msgstr ""
+
+#: .\core\models.py:24
+msgid "login"
+msgstr ""
+
+#: .\core\models.py:25
+msgid "change password"
+msgstr ""
+
+#: .\core\models.py:26
+msgid "change fund password"
+msgstr ""
+
+#: .\core\models.py:27
+msgid "change email"
+msgstr ""
+
+#: .\core\models.py:28
+msgid "bet"
+msgstr ""
+
+#: .\core\models.py:29
+msgid "submit topic"
+msgstr ""
+
+#: .\core\models.py:30
+msgid "deposit"
+msgstr ""
+
+#: .\core\models.py:31
+msgid "withdraw"
+msgstr ""
+
+#: .\core\models.py:34
+msgid "approve topic"
+msgstr ""
+
+#: .\core\models.py:35
+msgid "reject topic"
+msgstr ""
+
+#: .\core\models.py:36
+msgid "close topic"
+msgstr ""
+
+#: .\core\models.py:37
+msgid "cancel topic"
+msgstr ""
+
+#: .\core\models.py:38
+msgid "modify topic"
+msgstr ""
+
+#: .\core\models.py:39
+msgid "modify user"
+msgstr ""
+
+#: .\core\models.py:54
+msgid "Activities"
+msgstr ""
+
+#: .\core\models.py:68
+msgid "pending"
+msgstr ""
+
+#: .\core\models.py:69
+msgid "open"
+msgstr ""
+
+#: .\core\models.py:70 .\core\models.py:92
+msgid "deadline"
+msgstr ""
+
+#: .\core\models.py:71
+msgid "event closed"
+msgstr ""
+
+#: .\core\models.py:72
+msgid "completed"
+msgstr ""
+
+#: .\core\models.py:73
+msgid "cancelled"
+msgstr ""
+
+#: .\core\models.py:74
+msgid "rejected"
+msgstr ""
+
+#: .\core\models.py:85
+msgid "subject"
+msgstr ""
+
+#: .\core\models.py:86
+msgid "subject in english"
+msgstr ""
+
+#: .\core\models.py:87
+msgid "content"
+msgstr ""
+
+#: .\core\models.py:88
+msgid "content in english"
+msgstr ""
+
+#: .\core\models.py:89
+msgid "status"
+msgstr ""
+
+#: .\core\models.py:90
+msgid "tags"
+msgstr ""
+
+#: .\core\models.py:93
+msgid "event close date"
+msgstr ""
+
+#: .\core\models.py:95
+msgid "end weight"
+msgstr ""
+
+#: .\core\models.py:121
+msgid "weight"
+msgstr ""
+
+#: .\core\views.py:39
+msgid "You do not have enough score to post topic"
 msgstr ""
 
 #: .\registration\admin.py:23
@@ -96,52 +252,121 @@ msgstr ""
 msgid "registration profiles"
 msgstr ""
 
-#: .\yuce\settings.py:48
-msgid "English"
-msgstr ""
-
-#: .\yuce\settings.py:49
-msgid "Simplified Chinese"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:24
-msgid "Home"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:27
-msgid "Logout"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:29
-#: .\yuce\templates\registration\login.html.py:15
-#: .\yuce\templates\registration\login.html.py:17
-#: .\yuce\templates\registration\registration_complete.html.py:6
+#: .\registration\templates\registration\login.html.py:8
+#: .\registration\templates\registration\login.html.py:10
+#: .\registration\templates\registration\registration_complete.html.py:6
+#: .\yuce\templates\base.html.py:36
 msgid "Log in"
 msgstr ""
 
-#: .\yuce\templates\base.html.py:30
-#: .\yuce\templates\registration\registration_form.html.py:15
-#: .\yuce\templates\registration\registration_form.html.py:17
-msgid "Sign up"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:34
-msgid "Language"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:61
-msgid "About"
-msgstr ""
-
-#: .\yuce\templates\base.html.py:61
-msgid "Contact"
-msgstr ""
-
-#: .\yuce\templates\registration\logout.html.py:5
-#: .\yuce\templates\registration\registration_complete.html.py:5
+#: .\registration\templates\registration\logout.html.py:5
+#: .\registration\templates\registration\registration_complete.html.py:5
 msgid "Thanks for spending some quality time with the Web site today."
 msgstr ""
 
-#: .\yuce\templates\registration\logout.html.py:6
+#: .\registration\templates\registration\logout.html.py:6
 msgid "Log in again"
+msgstr ""
+
+#: .\registration\templates\registration\registration_form.html.py:8
+#: .\registration\templates\registration\registration_form.html.py:22
+#: .\yuce\templates\base.html.py:37
+msgid "Sign up"
+msgstr ""
+
+#: .\registration\templates\registration\registration_form.html.py:18
+msgid "Term Of Service"
+msgstr ""
+
+#: .\yuce\settings.py:59
+msgid "English"
+msgstr ""
+
+#: .\yuce\settings.py:60
+msgid "中文"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:34
+msgid "Logout"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:41
+msgid "Language"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:64
+msgid "Home"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:65
+msgid "Topics"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:66
+msgid "New Topic"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:67
+msgid "Archived Topics"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:92
+msgid "About"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:92
+msgid "Contact"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:92
+msgid "FAQ"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:12
+msgid "Create a new topic"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:25
+msgid "Subject"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:26
+msgid "Subject in English"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:34
+msgid "Content"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:35
+msgid "Content in English"
+msgstr ""
+
+#: .\yuce\templates\core\new_topic.html.py:46
+#: .\yuce\templates\core\topic_detail.html.py:35
+msgid "Submit"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:10
+msgid "Score"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:16
+msgid "Tags"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:24
+msgid "Start Date"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:26
+msgid "Deadline"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:27
+msgid "Event Close Date"
+msgstr ""
+
+#: .\yuce\templates\core\topic_detail.html.py:28
+msgid "Current Weight"
 msgstr ""

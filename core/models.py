@@ -11,7 +11,7 @@ from core.util import *
 
 
 class User(AbstractUser):
-    score = models.DecimalField(max_digits=20, decimal_places=8, default=getattr(settings, 'DEFAULT_USER_SCORE', 1000))
+    score = models.DecimalField(_('score'), max_digits=20, decimal_places=8, default=getattr(settings, 'DEFAULT_USER_SCORE', 1000))
     
     @classmethod
     def super_user(cls):
@@ -81,17 +81,18 @@ class Tag(models.Model):
         return self.tag
 
 class Topic(models.Model):
-    subject = models.CharField(max_length=200)
-    subject_english = models.CharField(max_length=200, blank=True)
-    content = models.TextField()
-    content_english = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUSES, default='pending')
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    user = models.ForeignKey(User)
+    subject = models.CharField(_('subject'), max_length=200)
+    subject_english = models.CharField(_('subject in english'), max_length=200, blank=True)
+    content = models.TextField(_('content'))
+    content_english = models.TextField(_('content in english'), blank=True)
+    status = models.CharField(_('status'), max_length=20, choices=STATUSES, default='pending')
+    tags = models.ManyToManyField(Tag, null=True, blank=True, verbose_name=_('tags'))
     created_date = models.DateTimeField(default=timezone.now)
-    deadline = models.DateTimeField()
-    event_close_date = models.DateTimeField()
+    deadline = models.DateTimeField(_('deadline'))
+    event_close_date = models.DateTimeField(_('event close date'))
     complete_date = models.DateTimeField(blank=True, null=True)
-    end_weight = models.PositiveIntegerField()
+    end_weight = models.PositiveIntegerField(_('end weight'))
     
     def __unicode__(self):
         return self.subject
@@ -116,9 +117,9 @@ class Topic(models.Model):
 class Bet(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
-    score = models.DecimalField(max_digits=20, decimal_places=8)
-    weight = models.PositiveIntegerField()
-    yesno = models.BooleanField()
+    score = models.DecimalField(_('score'), max_digits=20, decimal_places=8)
+    weight = models.PositiveIntegerField(_('weight'))
+    yesno = models.BooleanField(_('Yes/No'))
     created_date = models.DateTimeField(default=timezone.now)
     
     def __unicode__(self):

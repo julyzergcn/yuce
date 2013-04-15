@@ -43,16 +43,16 @@ class MyBooleanField(forms.BooleanField):
             return True
 
 class TopicCreationForm(forms.Form):
-    subject = forms.CharField()
-    subject_english = forms.CharField(required=False)
-    content = forms.CharField(widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}))
-    content_english = forms.CharField(widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}), required=False)
-    tags = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-    event_close_date = forms.DateTimeField()
-    deadline = forms.DateTimeField()
-    end_weight = forms.IntegerField(min_value=0, initial=getattr(settings, 'TOPIC_END_WEIGHT', 0))
+    subject = forms.CharField(label=_('subject'))
+    subject_english = forms.CharField(label=_('subject in English'), required=False)
+    content = forms.CharField(label=_('content'), widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}))
+    content_english = forms.CharField(label=_('content in English'), widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}), required=False)
+    tags = forms.MultipleChoiceField(label=_('tags'), widget=forms.CheckboxSelectMultiple)
+    event_close_date = forms.DateTimeField(label=_('event close date'))
+    deadline = forms.DateTimeField(label=_('deadline'))
+    end_weight = forms.IntegerField(label=_('end weight'), min_value=0, initial=getattr(settings, 'TOPIC_END_WEIGHT', 0))
     yesno = MyBooleanField(label=_('Yes/No'), required=False)
-    score = forms.DecimalField(min_value=0, required=False, max_digits=20, decimal_places=8)
+    score = forms.DecimalField(label=_('score'), min_value=0, required=False, max_digits=20, decimal_places=8)
     
     def __init__(self, request=None, **kwargs):
         super(TopicCreationForm, self).__init__(**kwargs)
@@ -73,6 +73,7 @@ class TopicCreationForm(forms.Form):
     def save(self, request):
         data = self.cleaned_data
         topic = Topic(
+            user = request.user,
             subject = data['subject'],
             subject_english = data['subject_english'],
             content = data['content'],

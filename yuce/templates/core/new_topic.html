@@ -9,7 +9,7 @@
 {% endblock navbar %}
 
 {% block content %}
-<h3>Create a new topic</h3>
+<h3>{% trans 'Create a new topic' %}</h3>
 <form method="post" action="">{% csrf_token %}
     {% if form.non_field_errors %}
         <div class="alert alert-error">

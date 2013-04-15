@@ -1,4 +1,4 @@
-#coding=utf8
+#coding=utf-8
 
 TOPIC_START_WEIGHT = 10**5
 TOPIC_END_WEIGHT = 10**4
