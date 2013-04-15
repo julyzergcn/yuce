@@ -1,0 +1,4 @@
+{% load i18n %}
+{% trans 'Welcome to' %} {{ site.domain }}, {% trans 'click the link below to active your account' %}:
+
+http://{{ site.domain }}{% url 'registration_activate' activation_key=activation_key %}

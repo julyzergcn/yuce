@@ -7,6 +7,12 @@ TOPIC_POST_COST = 10
 DATE_FORMAT = 'n/j/y'
 DATETIME_FORMAT = 'n/j/y H:i'
 
+EMAIL_HOST = 'smtp.yeah.net'
+EMAIL_HOST_USER = 'yuce_yuce@yeah.net'
+EMAIL_HOST_PASSWORD = 'Yuce321'
+EMAIL_PORT = 25
+DEFAULT_FROM_EMAIL = 'yuce_yuce@yeah.net'
+
 from os.path import dirname, join, abspath
 
 

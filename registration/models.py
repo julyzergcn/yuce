@@ -83,13 +83,13 @@ class RegistrationManager(models.Manager):
         
         """
         new_user = User.objects.create_user(username, email, password)
-        #~ new_user.is_active = False
+        new_user.is_active = False
         new_user.save()
 
         registration_profile = self.create_profile(new_user)
 
-        #~ if send_email:
-            #~ registration_profile.send_activation_email(site)
+        if send_email:
+            registration_profile.send_activation_email(site)
 
         return new_user
     create_inactive_user = transaction.commit_on_success(create_inactive_user)
