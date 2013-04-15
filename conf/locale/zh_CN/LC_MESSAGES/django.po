@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 22:45+0800\n"
+"POT-Creation-Date: 2013-04-15 23:33+0800\n"
 "PO-Revision-Date: 2008-03-20 23:22+0800\n"
 "Last-Translator: hutuworm <hutuworm@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,9 +27,45 @@ msgstr "是"
 msgid "No"
 msgstr "否"
 
+#: .\core\forms.py:46 .\core\models.py:85
+msgid "subject"
+msgstr "标题"
+
+#: .\core\forms.py:47
+msgid "subject in English"
+msgstr "英语标题"
+
+#: .\core\forms.py:48 .\core\models.py:87
+msgid "content"
+msgstr "内容"
+
+#: .\core\forms.py:49
+msgid "content in English"
+msgstr "英语内容"
+
+#: .\core\forms.py:50 .\core\models.py:90
+msgid "tags"
+msgstr "分类"
+
+#: .\core\forms.py:51 .\core\models.py:93
+msgid "event close date"
+msgstr "事件结束时间"
+
+#: .\core\forms.py:52 .\core\models.py:70 .\core\models.py:92
+msgid "deadline"
+msgstr "截至时间"
+
+#: .\core\forms.py:53 .\core\models.py:95
+msgid "end weight"
+msgstr "当前的权重"
+
 #: .\core\forms.py:54 .\core\forms.py:116 .\core\models.py:122
 msgid "Yes/No"
 msgstr "是/否"
+
+#: .\core\forms.py:55 .\core\models.py:14 .\core\models.py:120
+msgid "score"
+msgstr "积分"
 
 #: .\core\forms.py:65
 msgid "Deadline is not valid"
@@ -42,10 +78,6 @@ msgstr "事件结束时间应该在截至时间之后"
 #: .\core\forms.py:69 .\core\forms.py:126
 msgid "You donot have enough score to bet"
 msgstr "你没有足够的积分来参与"
-
-#: .\core\models.py:14 .\core\models.py:120
-msgid "score"
-msgstr "积分"
 
 #: .\core\models.py:24
 msgid "login"
@@ -115,10 +147,6 @@ msgstr "待审"
 msgid "open"
 msgstr "开放"
 
-#: .\core\models.py:70 .\core\models.py:92
-msgid "deadline"
-msgstr "截至时间"
-
 #: .\core\models.py:71
 msgid "event closed"
 msgstr "事件结束"
@@ -135,17 +163,9 @@ msgstr "取消"
 msgid "rejected"
 msgstr "拒绝"
 
-#: .\core\models.py:85
-msgid "subject"
-msgstr "标题"
-
 #: .\core\models.py:86
 msgid "subject in english"
 msgstr "英语标题"
-
-#: .\core\models.py:87
-msgid "content"
-msgstr "内容"
 
 #: .\core\models.py:88
 msgid "content in english"
@@ -154,18 +174,6 @@ msgstr "英语内容"
 #: .\core\models.py:89
 msgid "status"
 msgstr "状态"
-
-#: .\core\models.py:90
-msgid "tags"
-msgstr "分类"
-
-#: .\core\models.py:93
-msgid "event close date"
-msgstr "事件结束时间"
-
-#: .\core\models.py:95
-msgid "end weight"
-msgstr "当前的权重"
 
 #: .\core\models.py:121
 msgid "weight"
@@ -251,43 +259,30 @@ msgstr "注册信息"
 msgid "registration profiles"
 msgstr "注册信息"
 
-#: .\registration\templates\registration\login.html.py:8
-#: .\registration\templates\registration\login.html.py:10
-#: .\registration\templates\registration\registration_complete.html.py:6
-#: .\yuce\templates\base.html.py:36
-msgid "Log in"
-msgstr "登陆"
-
-#: .\registration\templates\registration\logout.html.py:5
-#: .\registration\templates\registration\registration_complete.html.py:5
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
-
-#: .\registration\templates\registration\logout.html.py:6
-msgid "Log in again"
-msgstr "重新登陆"
-
-#: .\registration\templates\registration\registration_form.html.py:8
-#: .\registration\templates\registration\registration_form.html.py:22
-#: .\yuce\templates\base.html.py:37
-msgid "Sign up"
-msgstr "注册"
-
-#: .\registration\templates\registration\registration_form.html.py:18
-msgid "Term Of Service"
-msgstr "服务协议"
-
-#: .\yuce\settings.py:59
+#: .\yuce\settings.py:65
 msgid "English"
 msgstr "英语"
 
-#: .\yuce\settings.py:60
+#: .\yuce\settings.py:66
 msgid "中文"
 msgstr ""
 
 #: .\yuce\templates\base.html.py:34
 msgid "Logout"
 msgstr "退出"
+
+#: .\yuce\templates\base.html.py:36
+#: .\yuce\templates\registration\login.html.py:8
+#: .\yuce\templates\registration\login.html.py:10
+#: .\yuce\templates\registration\registration_complete.html.py:6
+msgid "Log in"
+msgstr "登陆"
+
+#: .\yuce\templates\base.html.py:37
+#: .\yuce\templates\registration\registration_form.html.py:8
+#: .\yuce\templates\registration\registration_form.html.py:22
+msgid "Sign up"
+msgstr "注册"
 
 #: .\yuce\templates\base.html.py:41
 msgid "Language"
@@ -369,6 +364,28 @@ msgstr "事件结束时间"
 #: .\yuce\templates\core\topic_detail.html.py:28
 msgid "Current Weight"
 msgstr "当前的权重"
+
+#: .\yuce\templates\registration\activation_email.txt.py:2
+#: .\yuce\templates\registration\activation_email_subject.txt.py:2
+msgid "Welcome to"
+msgstr "欢迎来到"
+
+#: .\yuce\templates\registration\activation_email.txt.py:2
+msgid "click the link below to active your account"
+msgstr "点击下边的连接来激活你的帐号"
+
+#: .\yuce\templates\registration\logout.html.py:5
+#: .\yuce\templates\registration\registration_complete.html.py:5
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr "谢谢你的来访"
+
+#: .\yuce\templates\registration\logout.html.py:6
+msgid "Log in again"
+msgstr "重新登陆"
+
+#: .\yuce\templates\registration\registration_form.html.py:18
+msgid "Term Of Service"
+msgstr "服务协议"
 
 #~ msgid "last login ip"
 #~ msgstr "最后一次登陆IP"

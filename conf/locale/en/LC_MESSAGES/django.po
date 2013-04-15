@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 22:45+0800\n"
+"POT-Creation-Date: 2013-04-15 23:32+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,8 +28,44 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: .\core\forms.py:46 .\core\models.py:85
+msgid "subject"
+msgstr ""
+
+#: .\core\forms.py:47
+msgid "subject in English"
+msgstr ""
+
+#: .\core\forms.py:48 .\core\models.py:87
+msgid "content"
+msgstr ""
+
+#: .\core\forms.py:49
+msgid "content in English"
+msgstr ""
+
+#: .\core\forms.py:50 .\core\models.py:90
+msgid "tags"
+msgstr ""
+
+#: .\core\forms.py:51 .\core\models.py:93
+msgid "event close date"
+msgstr ""
+
+#: .\core\forms.py:52 .\core\models.py:70 .\core\models.py:92
+msgid "deadline"
+msgstr ""
+
+#: .\core\forms.py:53 .\core\models.py:95
+msgid "end weight"
+msgstr ""
+
 #: .\core\forms.py:54 .\core\forms.py:116 .\core\models.py:122
 msgid "Yes/No"
+msgstr ""
+
+#: .\core\forms.py:55 .\core\models.py:14 .\core\models.py:120
+msgid "score"
 msgstr ""
 
 #: .\core\forms.py:65
@@ -42,10 +78,6 @@ msgstr ""
 
 #: .\core\forms.py:69 .\core\forms.py:126
 msgid "You donot have enough score to bet"
-msgstr ""
-
-#: .\core\models.py:14 .\core\models.py:120
-msgid "score"
 msgstr ""
 
 #: .\core\models.py:24
@@ -116,10 +148,6 @@ msgstr ""
 msgid "open"
 msgstr ""
 
-#: .\core\models.py:70 .\core\models.py:92
-msgid "deadline"
-msgstr ""
-
 #: .\core\models.py:71
 msgid "event closed"
 msgstr ""
@@ -136,16 +164,8 @@ msgstr ""
 msgid "rejected"
 msgstr ""
 
-#: .\core\models.py:85
-msgid "subject"
-msgstr ""
-
 #: .\core\models.py:86
 msgid "subject in english"
-msgstr ""
-
-#: .\core\models.py:87
-msgid "content"
 msgstr ""
 
 #: .\core\models.py:88
@@ -154,18 +174,6 @@ msgstr ""
 
 #: .\core\models.py:89
 msgid "status"
-msgstr ""
-
-#: .\core\models.py:90
-msgid "tags"
-msgstr ""
-
-#: .\core\models.py:93
-msgid "event close date"
-msgstr ""
-
-#: .\core\models.py:95
-msgid "end weight"
 msgstr ""
 
 #: .\core\models.py:121
@@ -252,42 +260,29 @@ msgstr ""
 msgid "registration profiles"
 msgstr ""
 
-#: .\registration\templates\registration\login.html.py:8
-#: .\registration\templates\registration\login.html.py:10
-#: .\registration\templates\registration\registration_complete.html.py:6
-#: .\yuce\templates\base.html.py:36
-msgid "Log in"
-msgstr ""
-
-#: .\registration\templates\registration\logout.html.py:5
-#: .\registration\templates\registration\registration_complete.html.py:5
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
-
-#: .\registration\templates\registration\logout.html.py:6
-msgid "Log in again"
-msgstr ""
-
-#: .\registration\templates\registration\registration_form.html.py:8
-#: .\registration\templates\registration\registration_form.html.py:22
-#: .\yuce\templates\base.html.py:37
-msgid "Sign up"
-msgstr ""
-
-#: .\registration\templates\registration\registration_form.html.py:18
-msgid "Term Of Service"
-msgstr ""
-
-#: .\yuce\settings.py:59
+#: .\yuce\settings.py:65
 msgid "English"
 msgstr ""
 
-#: .\yuce\settings.py:60
+#: .\yuce\settings.py:66
 msgid "中文"
 msgstr ""
 
 #: .\yuce\templates\base.html.py:34
 msgid "Logout"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:36
+#: .\yuce\templates\registration\login.html.py:8
+#: .\yuce\templates\registration\login.html.py:10
+#: .\yuce\templates\registration\registration_complete.html.py:6
+msgid "Log in"
+msgstr ""
+
+#: .\yuce\templates\base.html.py:37
+#: .\yuce\templates\registration\registration_form.html.py:8
+#: .\yuce\templates\registration\registration_form.html.py:22
+msgid "Sign up"
 msgstr ""
 
 #: .\yuce\templates\base.html.py:41
@@ -369,4 +364,26 @@ msgstr ""
 
 #: .\yuce\templates\core\topic_detail.html.py:28
 msgid "Current Weight"
+msgstr ""
+
+#: .\yuce\templates\registration\activation_email.txt.py:2
+#: .\yuce\templates\registration\activation_email_subject.txt.py:2
+msgid "Welcome to"
+msgstr ""
+
+#: .\yuce\templates\registration\activation_email.txt.py:2
+msgid "click the link below to active your account"
+msgstr ""
+
+#: .\yuce\templates\registration\logout.html.py:5
+#: .\yuce\templates\registration\registration_complete.html.py:5
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr ""
+
+#: .\yuce\templates\registration\logout.html.py:6
+msgid "Log in again"
+msgstr ""
+
+#: .\yuce\templates\registration\registration_form.html.py:18
+msgid "Term Of Service"
 msgstr ""
