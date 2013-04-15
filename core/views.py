@@ -12,31 +12,39 @@ from core.util import *
 def index(request):
     return render(request, 'index.html')
 
-def topics(request):
+def topic_list(request):
     context = {
-        'topics': Topic.active_topics(),
+        'topics': Topic.objects.filter(status='open'),
     }
-    return render(request, 'core/topics.html', context)
+    return render(request, 'core/topic_list.html', context)
 
 def topic_detail(request, id):
     topic = get_object_or_404(Topic, id=id)
+    if request.method == 'POST':
+        form = BetForm(data=request.POST, request=request)
+        if form.is_valid():
+            form.save(request, topic)
+            return redirect('topic_list')
+    else:
+        form = BetForm(request=request)
     context = {
         'topic': topic,
+        'form': form,
     }
     return render(request, 'core/topic_detail.html', context)
 
 @login_required
 def new_topic(request):
     if not user_can_post_topic(request.user):
-        messages.error(request, _(u'You do not have enough coins to post topic'))
-        return redirect('topics')
+        messages.error(request, _(u'You do not have enough score to post topic'))
+        return redirect('home')
     if request.method == 'POST':
-        form = TopicCreationForm(request.POST)
+        form = TopicCreationForm(data=request.POST, request=request)
         if form.is_valid():
             form.save(request)
-            return redirect('topics')
+            return redirect('home')
     else:
-        form = TopicCreationForm()
+        form = TopicCreationForm(request=request)
     context = {
         'form': form,
         'tags': Tag.objects.all(),
@@ -45,9 +53,9 @@ def new_topic(request):
 
 def archived_topics(request):
     context = {
-        'topics': Topic.archived_topics(),
+        'topics': Topic.objects.filter(status='completed'),
     }
     return render(request, 'core/archived_topics.html', context)
 
 def search(request):
-    return http.HttpResponseRedirect('/')
+    return redirect('home')

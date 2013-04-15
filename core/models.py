@@ -5,66 +5,77 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.conf import settings
 
 from core.util import *
 
 
-def update_last_login_ip(sender, request, user, **kwargs):
-    '''
-    A signal receiver which updates the last_login_ip for
-    the user logging in.
-    '''
-    user.last_login_ip = request.META.get('REMOTE_ADDR')
-    user.save(update_fields=['last_login_ip'])
-
-user_logged_in.connect(update_last_login_ip)
-
 class User(AbstractUser):
-    last_login_ip = models.CharField(_('last login ip'), max_length=20)
-    coins = models.PositiveIntegerField(default=0)
-
-class Action(models.Model):
-    short_text = models.CharField(max_length=20)
-    text = models.CharField(max_length=200)
+    score = models.DecimalField(max_digits=20, decimal_places=8, default=getattr(settings, 'DEFAULT_USER_SCORE', 1000))
     
-    def __unicode__(self):
-        return self.short_text
+    @classmethod
+    def super_user(cls):
+        try:
+            return cls.objects.filter(is_superuser=True).order_by('id')[0]
+        except IndexError:
+            return None
+
+ACTIONS = (
+    ('login', _('login')),
+    ('change password', _('change password')),
+    ('change fund password', _('change fund password')),
+    ('change email', _('change email')),
+    ('bet', _('bet')),
+    ('submit topic', _('submit topic')),
+    ('deposit', _('deposit')),
+    ('withdraw', _('withdraw')),
+    
+    # below are for admin user only
+    ('approve topic', _('approve topic')),
+    ('reject topic', _('reject topic')),
+    ('close topic', _('close topic')),
+    ('cancel topic', _('cancel topic')),
+    ('modify topic', _('modify topic')),
+    ('modify user', _('modify user')),
+)
 
 class Activity(models.Model):
     user = models.ForeignKey(User)
-    action = models.ForeignKey(Action)
-    created_date = models.DateTimeField(default=timezone.now)
+    action = models.CharField(max_length=20, choices=ACTIONS)
+    action_date = models.DateTimeField(default=timezone.now)
+    
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     target = generic.GenericForeignKey('content_type', 'object_id')
+    
     text = models.CharField(max_length=200, blank=True)
     
     class Meta:
         verbose_name_plural = _('Activities')
     
     def __unicode__(self):
-        return u'[%s]%s %s %s'%(self.date, self.user, self.action.text, self.target or self.text)
+        return u'[%s] %s %s %s'%(self.action_date, self.user, _(self.action), self.target or self.text)
 
-###################
+def on_user_login(sender, request, user, **kwargs):
+    login_ip = request.META.get('REMOTE_ADDR')
+    activity = Activity(user=user, action='login', text=login_ip)
+    activity.save()
 
-class Status(models.Model):
-    PENDING = 1
-    OPEN = 2
-    CLOSED = 3
-    COMPLETED = 4
-    CANCELLED = 5
-    REJECTED = 6
-    short_text = models.CharField(max_length=20)
-    text = models.CharField(max_length=20)
-    
-    class Meta:
-        verbose_name_plural = _('Statuses')
-    
-    def __unicode__(self):
-        return self.text
+# when user login, django send out a signal `user_logged_in`, we save the login ip here
+user_logged_in.connect(on_user_login)
+
+STATUSES = (
+    ('pending', _('pending')),
+    ('open', _('open')),
+    ('deadline', _('deadline')),
+    ('event closed', _('event closed')),
+    ('completed', _('completed')),
+    ('cancelled', _('cancelled')),
+    ('rejected', _('rejected')),
+)
 
 class Tag(models.Model):
-    tag = models.CharField(max_length=200)
+    tag = models.CharField(max_length=20)
     
     def __unicode__(self):
         return self.tag
@@ -74,11 +85,12 @@ class Topic(models.Model):
     subject_english = models.CharField(max_length=200, blank=True)
     content = models.TextField()
     content_english = models.TextField(blank=True)
-    status = models.ForeignKey(Status, default=Status.PENDING)
+    status = models.CharField(max_length=20, choices=STATUSES, default='pending')
     tags = models.ManyToManyField(Tag, null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField()
-    close_date = models.DateTimeField()
+    event_close_date = models.DateTimeField()
+    complete_date = models.DateTimeField(blank=True, null=True)
     end_weight = models.PositiveIntegerField()
     
     def __unicode__(self):
@@ -88,32 +100,26 @@ class Topic(models.Model):
     def get_absolute_url(self):
         return ('topic_detail', [self.id])
     
-    @classmethod
-    def archived_topics(cls):
-        return cls.objects.filter(status=Status.COMPLETED)
+    def score_for_bet(self, yesno):
+        yesno = True if yesno.lower() == 'yes' else False
+        return sum(self.bet_set.filter(yesno=yesno).values_list('score', flat=True))
     
-    @classmethod
-    def active_topics(cls):
-        return cls.objects.filter(status=Status.OPEN)
+    def yes_score(self):
+        return self.score_for_bet('yes')
     
-    def yes_bet_coins(self):
-        return sum(self.bet_set.filter(yesno=True).values_list('coins', flat=True))
-    
-    def no_bet_coins(self):
-        return sum(self.bet_set.filter(yesno=False).values_list('coins', flat=True))
+    def no_score(self):
+        return self.score_for_bet('no')
     
     def current_weight(self):
         return get_current_weight(self)
-    
+
 class Bet(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
-    coins = models.PositiveIntegerField()
+    score = models.DecimalField(max_digits=20, decimal_places=8)
     weight = models.PositiveIntegerField()
     yesno = models.BooleanField()
     created_date = models.DateTimeField(default=timezone.now)
-    status = models.ForeignKey(Status, default=Status.OPEN)
-    status_date = models.DateTimeField(default=timezone.now)
     
     def __unicode__(self):
-        return u'%s %s'%(self.user, self.topic)
+        return u'%s %s %s %s'%(self.user, self.topic, self.yesno, self.score)

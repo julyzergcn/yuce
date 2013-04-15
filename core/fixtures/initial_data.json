@@ -1,130 +1,37 @@
 [
 {
     "pk": 1, 
-    "model": "core.action", 
+    "model": "core.tag", 
     "fields": {
-        "text": "\u4fee\u6539\u5bc6\u7801", 
-        "short_text": "change_password"
+        "tag": "\u5a31\u4e50"
     }
 },
 {
     "pk": 2, 
-    "model": "core.action", 
+    "model": "core.tag", 
     "fields": {
-        "text": "\u4fee\u6539email", 
-        "short_text": "change_email"
+        "tag": "\u79d1\u6280"
     }
 },
 {
     "pk": 3, 
-    "model": "core.action", 
+    "model": "core.tag", 
     "fields": {
-        "text": "\u4e0b\u6ce8", 
-        "short_text": "bet"
+        "tag": "\u7ecf\u6d4e"
     }
 },
 {
     "pk": 4, 
-    "model": "core.action", 
+    "model": "core.tag", 
     "fields": {
-        "text": "\u63d0\u4ea4\u8bdd\u9898", 
-        "short_text": "create_topic"
+        "tag": "\u793e\u4f1a"
     }
 },
 {
     "pk": 5, 
-    "model": "core.action", 
+    "model": "core.tag", 
     "fields": {
-        "text": "\u51b2\u503c", 
-        "short_text": "deposit"
-    }
-},
-{
-    "pk": 6, 
-    "model": "core.action", 
-    "fields": {
-        "text": "\u63d0\u73b0", 
-        "short_text": "withdraw"
-    }
-},
-{
-    "pk": 7, 
-    "model": "core.action", 
-    "fields": {
-        "text": "\u5ba1\u6838\u901a\u8fc7", 
-        "short_text": "approve"
-    }
-},
-{
-    "pk": 8, 
-    "model": "core.action", 
-    "fields": {
-        "text": "\u5ba1\u6838\u62d2\u7edd", 
-        "short_text": "reject"
-    }
-},
-{
-    "pk": 9, 
-    "model": "core.action", 
-    "fields": {
-        "text": "\u4fee\u6539\u8bdd\u9898", 
-        "short_text": "change_topic"
-    }
-},
-{
-    "pk": 10, 
-    "model": "core.action", 
-    "fields": {
-        "text": "\u4fee\u6539\u7528\u6237", 
-        "short_text": "change_user"
-    }
-},
-{
-    "pk": 1, 
-    "model": "core.status", 
-    "fields": {
-        "text": "\u5f85\u5ba1\u6838", 
-        "short_text": "pending"
-    }
-},
-{
-    "pk": 2, 
-    "model": "core.status", 
-    "fields": {
-        "text": "open", 
-        "short_text": "open"
-    }
-},
-{
-    "pk": 3, 
-    "model": "core.status", 
-    "fields": {
-        "text": "closed", 
-        "short_text": "closed"
-    }
-},
-{
-    "pk": 4, 
-    "model": "core.status", 
-    "fields": {
-        "text": "completed", 
-        "short_text": "completed"
-    }
-},
-{
-    "pk": 5, 
-    "model": "core.status", 
-    "fields": {
-        "text": "\u88ab\u64a4\u9500", 
-        "short_text": "cancelled"
-    }
-},
-{
-    "pk": 6, 
-    "model": "core.status", 
-    "fields": {
-        "text": "\u88ab\u62d2\u7edd", 
-        "short_text": "rejected"
+        "tag": "\u519b\u4e8b"
     }
 }
 ]

@@ -11,6 +11,15 @@
 {% block content %}
 <h3>Create a new topic</h3>
 <form method="post" action="">{% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">&times;</a>
+            {% for non_field_error in form.non_field_errors %}
+                 {{ non_field_error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div id="subjects">
         <ul>
             <li><a href="#subject">{% trans 'Subject' %}</a></li>
@@ -29,10 +38,11 @@
         <div id="content_english">{{ form.content_english|bootstrap }}</div>
     </div>
     {{ form.tags|bootstrap }}
+    {{ form.event_close_date|bootstrap }}
     {{ form.deadline|bootstrap }}
-    {{ form.close_date|bootstrap }}
-    {{ form.yes|bootstrap }}
-    {{ form.coins|bootstrap }}
+    {{ form.end_weight|bootstrap }}
+    {{ form.yesno|bootstrap }}
+    {{ form.score|bootstrap }}
     <input type="submit" value="{% trans 'Submit' %}" class="btn" />
 </form>
 {% endblock content %}
@@ -42,7 +52,27 @@
 <script src="{{ STATIC_URL }}jquery-ui/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function(){
-    $('.datetime').datetimepicker();
+    $('#id_event_close_date').datetimepicker({
+        minDate: 3,
+        //~ changeYear: true,
+        //~ changeMonth: true,
+        //~ showOn: "button",
+        monthNames: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+        showMonthAfterYear: true,
+
+        onSelect: function(){
+            var d = $(this).datetimepicker('getDate');
+            var deadline = new Date(d.getFullYear(),d.getMonth(),d.getDate()-3);
+            $('#id_deadline').datetimepicker('setDate', deadline);
+        }
+    });
+    
+    $('#id_deadline').datetimepicker({
+        minDate:0,
+        monthNames: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+        showMonthAfterYear: true
+    });
+    
     $('#subjects').tabs();
     $('#contents').tabs();
 });

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize %}
+{% load i18n humanize  bootstrap %}
 
 {% block content %}
     <h3>{{ topic.subject }}</h3>
@@ -7,10 +7,10 @@
         {{ topic.content|linebreaks|safe }}
     </div>
     
-    <strong>{% trans 'Coins' %}</strong>:
+    <strong>{% trans 'Score' %}</strong>:
     <ul>
-        <li>Yes: {{ topic.yes_bet_coins }}</li>
-        <li>No: {{ topic.no_bet_coins }}</li>
+        <li>Yes: {{ topic.yes_score }}</li>
+        <li>No: {{ topic.no_score }}</li>
     </ul>
     
     <strong>{% trans 'Tags' %}</strong>:
@@ -23,13 +23,16 @@
     <div>
         <strong>{% trans 'Start Date' %}</strong>: {{ topic.created_date }} ( {{ topic.created_date|naturalday }}  {{ topic.created_date|naturaltime }} )<br>
 <br>
-        <strong>{% trans 'End Date' %}</strong>: {{ topic.deadline }} ( {{ topic.deadline|naturalday }}  {{ topic.deadline|naturaltime }} )<br>
-        <strong>{% trans 'Event Close Date' %}</strong>: {{ topic.close_date }} ( {{ topic.close_date|naturalday }}  {{ topic.close_date|naturaltime }} )<br>
+        <strong>{% trans 'Deadline' %}</strong>: {{ topic.deadline }} ( {{ topic.deadline|naturalday }}  {{ topic.deadline|naturaltime }} )<br>
+        <strong>{% trans 'Event Close Date' %}</strong>: {{ topic.event_close_date }} ( {{ topic.event_close_date|naturalday }}  {{ topic.event_close_date|naturaltime }} )<br>
         <strong>{% trans 'Current Weight' %}</strong>: {{ topic.current_weight}}
     </div>
     
     <br>
     <div>
-        <a href="#" class="btn">Yes</a> &nbsp;&nbsp; <a href="#" class="btn">No</a>
+        <form method="post" action="">{% csrf_token %}
+            {{ form|bootstrap }}
+            <input type="submit" value="{% trans 'Submit' %}" class="btn" />
+        </form>
     </div>
 {% endblock content %}

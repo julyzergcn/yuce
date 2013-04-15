@@ -3,7 +3,10 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
 from django.contrib.auth.forms import UserChangeForm as AuthUserChangeForm
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
+from django.utils import timezone, decorators
+from django.db import transaction
+from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 
 from core.models import *
 from core.util import *
@@ -25,31 +28,48 @@ class UserCreationForm(AuthUserCreationForm):
             return username
         raise forms.ValidationError(self.error_messages['duplicate_username'])
 
+YESNO_CHOICES = (
+    ('1', _('Yes')), 
+    ('0', _('No'))
+)
+
+class MyBooleanField(forms.BooleanField):
+    widget = forms.RadioSelect(choices=YESNO_CHOICES)
+    
+    def to_python(self, value):
+        if str(value).strip() == '0':
+            return False
+        elif str(value).strip() == '1':
+            return True
+
 class TopicCreationForm(forms.Form):
     subject = forms.CharField()
     subject_english = forms.CharField(required=False)
     content = forms.CharField(widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}))
     content_english = forms.CharField(widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}), required=False)
-    tags = forms.CharField(required=False)
-    deadline = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'datetime'}))
-    close_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class': 'datetime'}))
-    yes = forms.BooleanField(required=False)
-    coins = forms.IntegerField(min_value=0, required=False)
+    tags = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+    event_close_date = forms.DateTimeField()
+    deadline = forms.DateTimeField()
+    end_weight = forms.IntegerField(min_value=0, initial=getattr(settings, 'TOPIC_END_WEIGHT', 0))
+    yesno = MyBooleanField(label=_('Yes/No'), required=False)
+    score = forms.DecimalField(min_value=0, required=False, max_digits=20, decimal_places=8)
     
-    def clean_tags(self):
-        tags = self.cleaned_data['tags']
-        if tags:
-            return tags.split()
-        return []
+    def __init__(self, request=None, **kwargs):
+        super(TopicCreationForm, self).__init__(**kwargs)
+        self.fields['tags'].choices = [(t.id, t.tag) for t in Tag.objects.all()]
+        self.request = request
     
     def clean(self):
         data = self.cleaned_data
-        if data['deadline'] < timezone.now():
-            raise forms.ValidatorError(_('Deadline not valid'))
-        if data['close_date'] < data['deadline']:
-            raise forms.ValidationError(_('Close data should be after deadline'))
+        if 'deadline' in data and data['deadline'] < timezone.now():
+            raise forms.ValidatorError(_('Deadline is not valid'))
+        if 'event_close_date' in data and data['event_close_date'] < data['deadline']:
+            raise forms.ValidationError(_('Event close date should be after deadline'))
+        if self.request and 'score' in data and data['score'] > self.request.user.score:
+            raise forms.ValidationError(_('You donot have enough score to bet'))
         return data
     
+    @decorators.method_decorator(transaction.commit_on_success)
     def save(self, request):
         data = self.cleaned_data
         topic = Topic(
@@ -58,20 +78,71 @@ class TopicCreationForm(forms.Form):
             content = data['content'],
             content_english = data['content_english'],
             deadline = data['deadline'],
-            close_date = data['close_date'],
-            end_weight = getattr(settings, 'TOPIC_END_WEIGHT', 0),
+            event_close_date = data['event_close_date'],
+            end_weight = data['end_weight'],
         )
         topic.save()
+        user_pay_topic_post(request.user)
+        Activity(
+            user = request.user,
+            action = 'submit topic',
+            content_type = ContentType.objects.get_for_model(Topic),
+            object_id = topic.id,
+        ).save()
+        
         for tag in data['tags']:
-            a_tag, created = Tag.objects.get_or_create(tag=tag)
-            topic.tags.add(a_tag)
-        if data['coins'] is not None:
+            topic.tags.add(tag)
+        
+        if 'score' in data and 'yesno' in data:
             bet = Bet(
                 user = request.user,
                 topic = topic,
-                coins = data['coins'],
+                score = data['score'],
                 weight = get_current_weight(topic),
-                yesno = data['yes'],
+                yesno = data['yesno'],
             )
             bet.save()
+            user_pay_bet(request.user, bet)
+            Activity(
+                user = request.user,
+                action = 'bet',
+                content_type = ContentType.objects.get_for_model(Topic),
+                object_id = topic.id,
+                text = ('yes' if data['yesno'] else 'no') + ' ' + str(data['score'])
+            ).save()
+
+class BetForm(forms.Form):
+    yesno = MyBooleanField(label=_('Yes/No'))
+    score = forms.DecimalField(min_value=0, max_digits=20, decimal_places=8)
+    
+    def __init__(self, request=None, **kwargs):
+        super(BetForm, self).__init__(**kwargs)
+        self.request = request
+    
+    def clean(self):
+        data = self.cleaned_data
+        if self.request and 'score' in data and data['score'] > self.request.user.score:
+            raise forms.ValidationError(_('You donot have enough score to bet'))
+        return data
+    
+    @decorators.method_decorator(transaction.commit_on_success)
+    def save(self, request, topic):
+        data = self.cleaned_data
+        bet = Bet(
+            user = request.user,
+            topic = topic,
+            score = data['score'],
+            weight = get_current_weight(topic),
+            yesno = data['yesno'],
+        )
+        bet.save()
+        user_pay_bet(request.user, bet)
+        Activity(
+            user = request.user,
+            action = 'bet',
+            content_type = ContentType.objects.get_for_model(Topic),
+            object_id = topic.id,
+            text = ('yes' if data['yesno'] else 'no') + ' ' + str(data['score'])
+        ).save()
+
     
