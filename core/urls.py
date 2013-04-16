@@ -8,5 +8,5 @@ urlpatterns = patterns('core.views',
     url(r'^topic/new/$', 'new_topic', name='new_topic'),
     url(r'^topic/archived/$', 'archived_topics', name='archived_topics'),
     url(r'^search/$', 'search', name='search'),
-    #~ url(r'^
+    url(r'^dumpdata/$', 'dumpdata'),
 )

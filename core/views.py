@@ -3,6 +3,7 @@ from django import http
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.core.serializers import serialize
 
 from core.models import *
 from core.forms import *
@@ -59,3 +60,14 @@ def archived_topics(request):
 
 def search(request):
     return redirect('home')
+
+def dumpdata(request):
+    response = http.HttpResponse()
+    response['Content-Type'] = 'text/plain; charset=utf-8'
+    response['Content-Disposition'] = 'attachment; filename=dump.json'
+    lst = []
+    for model in (User, Topic, Bet):
+        lst += list(model.objects.all())
+    json = serialize('json', lst, indent=4)
+    response.write(json)
+    return response
