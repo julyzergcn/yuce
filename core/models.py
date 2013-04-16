@@ -12,6 +12,7 @@ from core.util import *
 
 class User(AbstractUser):
     score = models.DecimalField(_('score'), max_digits=20, decimal_places=8, default=getattr(settings, 'DEFAULT_USER_SCORE', 1000))
+    last_login_ip = models.CharField(max_length=20, blank=True)
     
     @classmethod
     def super_user(cls):
@@ -58,8 +59,11 @@ class Activity(models.Model):
 
 def on_user_login(sender, request, user, **kwargs):
     login_ip = request.META.get('REMOTE_ADDR')
-    activity = Activity(user=user, action='login', text=login_ip)
-    activity.save()
+    if login_ip != user.last_login_ip:
+        user.last_login_ip = login_ip
+        user.save(update_fields=['last_login_ip'])
+        activity = Activity(user=user, action='login', text=login_ip)
+        activity.save()
 
 # when user login, django send out a signal `user_logged_in`, we save the login ip here
 user_logged_in.connect(on_user_login)
