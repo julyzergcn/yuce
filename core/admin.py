@@ -1,13 +1,13 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.models import Permission
 from django.utils.translation import ugettext_lazy as _
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
-from django.utils.decorators import method_decorator
+from django import http
 
 from core.models import *
-from core.forms import UserCreationForm, UserChangeForm
+from core.forms import *
 
 
 #~ admin.site.register(Permission)
@@ -43,6 +43,8 @@ class TopicAdmin(admin.ModelAdmin):
     list_filter = ('status', )
     
     def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'yesno':
+            return MyBooleanField(required=False, label=_('Yes/No'))
         formfield = super(TopicAdmin, self).formfield_for_dbfield(db_field, **kwargs)
         request = kwargs.pop("request", None)
         if db_field.name == 'status' and request:
@@ -57,10 +59,36 @@ class TopicAdmin(admin.ModelAdmin):
                     formfield.choices = ((current_status, _(current_status)),)
         return formfield
     
-    def save_form(self, request, form, change):
-        return form.save(commit=False)
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        topic = Topic.objects.select_related().get(id=object_id)
+        status = topic.status
+        text = topic.text
+        yesno = topic.yesno
+        if request.method == 'POST':
+            new_status = request.POST.get('status')
+            new_text = request.POST.get('text')
+            new_yesno = request.POST.get('yesno')
+            new_yesno = {'1': True, '0': False}.get(new_yesno)
+            if status == 'pending' and new_status == 'rejected':
+                if new_text == text:
+                    self.message_user(request, _('Error! Leave a note why you reject the topic'), level=messages.ERROR)
+                    return http.HttpResponseRedirect(request.get_full_path())
+            elif status != 'cancelled' and new_status == 'cancelled':
+                if new_text == text:
+                    self.message_user(request, _('Error! Leave a note why you cancel the topic'), level=messages.ERROR)
+                    return http.HttpResponseRedirect(request.get_full_path())
+            if yesno is None and new_yesno is not None:
+                if status == 'event closed':
+                    self.should_be_completed = True
+                else:
+                    self.message_user(request, _('Error! Cannot close the topic'), level=messages.ERROR)
+                    return http.HttpResponseRedirect(request.get_full_path())
+            elif yesno is not None and new_yesno is not None:
+                self.message_user(request, _('Error! Topic was already closed'), level=messages.ERROR)
+                return http.HttpResponseRedirect(request.get_full_path())
+        return super(TopicAdmin, self).change_view(request, object_id, form_url, extra_context)
     
-    @method_decorator(transaction.commit_on_success)
+    @transaction.commit_on_success
     def save_model(self, request, obj, form, change):
         if change:
             action = 'modify topic'
@@ -72,23 +100,21 @@ class TopicAdmin(admin.ModelAdmin):
                     action = 'approve topic'
                 elif original_status == 'pending' and new_status == 'rejected':
                     action = 'reject topic'
-                    #~ if obj.text == topic.text:
-                        #~ raise forms.ValidationError(_('Input why you reject the topic'))
                     # TODO: give back score to the joined users
-                
-                #~ elif original_status == 'event closed' and new_status == 'completed':
-                    #~ action = 'close topic'
                 elif new_status == 'cancelled':
                     action = 'cancel topic'
-                    #~ if obj.text == topic.text:
-                        #~ raise forms.ValidationError(_('Input why you cancel the topic'))
                     # TODO: give back score to the joined users
+            elif hasattr(self, 'should_be_completed') and self.should_be_completed:
+                obj.status = 'completed'
+                action = 'close topic'
+            
             Activity(
                 user = request.user,
                 action = action,
                 content_type = ContentType.objects.get_for_model(Topic),
                 object_id = obj.id,
             ).save()
+        
         obj.save()
 
 admin.site.register(Topic, TopicAdmin)

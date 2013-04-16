@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
 from django.contrib.auth.forms import UserChangeForm as AuthUserChangeForm
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone, decorators
+from django.utils import timezone
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -33,14 +33,21 @@ YESNO_CHOICES = (
     ('0', _('No'))
 )
 
+class MyRadioSelect(forms.RadioSelect):
+    def render(self, name, value, attrs=None, choices=()):
+        value = {True: '1', False: '0'}.get(value)
+        return self.get_renderer(name, value, attrs, choices).render()
+
 class MyBooleanField(forms.BooleanField):
-    widget = forms.RadioSelect(choices=YESNO_CHOICES)
+    widget = MyRadioSelect(choices=YESNO_CHOICES)
     
     def to_python(self, value):
-        if str(value).strip() == '0':
-            return False
-        elif str(value).strip() == '1':
+        if value == '1':
             return True
+        elif value == '0':
+            return False
+        else:
+            return None
 
 class TopicCreationForm(forms.Form):
     subject = forms.CharField(label=_('subject'))
@@ -73,7 +80,7 @@ class TopicCreationForm(forms.Form):
         
         return data
     
-    @decorators.method_decorator(transaction.commit_on_success)
+    @transaction.commit_on_success
     def save(self, request):
         data = self.cleaned_data
         topic = Topic(
@@ -136,7 +143,7 @@ class BetForm(forms.Form):
         
         return data
     
-    @decorators.method_decorator(transaction.commit_on_success)
+    @transaction.commit_on_success
     def save(self, request, topic):
         data = self.cleaned_data
         bet = Bet(

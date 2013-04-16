@@ -53,7 +53,7 @@
 <script type="text/javascript">
 $(function(){
     $('#id_event_close_date').datetimepicker({
-        minDate: 3,
+        minDate: 1,
         //~ changeYear: true,
         //~ changeMonth: true,
         //~ showOn: "button",
@@ -62,7 +62,11 @@ $(function(){
 
         onSelect: function(){
             var d = $(this).datetimepicker('getDate');
-            var deadline = new Date(d.getFullYear(),d.getMonth(),d.getDate()-3);
+            var now = new Date();
+            if(d.getDate() - now.getDate() < 3)
+                var deadline = new Date(d.getFullYear(),d.getMonth(),d.getDate(),d.getHours()-12,d.getMinutes());
+            else
+                var deadline = new Date(d.getFullYear(),d.getMonth(),d.getDate()-3);
             $('#id_deadline').datetimepicker('setDate', deadline);
         }
     });

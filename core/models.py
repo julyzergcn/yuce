@@ -97,6 +97,8 @@ class Topic(models.Model):
     event_close_date = models.DateTimeField(_('event close date'))
     complete_date = models.DateTimeField(blank=True, null=True)
     end_weight = models.PositiveIntegerField(_('end weight'))
+    text = models.TextField(_('note'), blank=True)
+    yesno = models.NullBooleanField(_('Yes/No'), blank=True, null=True)
     
     def __unicode__(self):
         return self.subject
@@ -117,6 +119,14 @@ class Topic(models.Model):
     
     def current_weight(self):
         return get_current_weight(self)
+    
+    def save(self, **kwargs):
+        super(Topic, self).save(**kwargs)
+        
+        if self.event_close_date < timezone.now():
+            mark_event_closed(self)
+        elif self.deadline < timezone.now():
+            mark_deadline(self)
     
     def can_bet(self):
         if self.status != 'open':
