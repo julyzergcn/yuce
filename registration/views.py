@@ -8,8 +8,12 @@ from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
+from django.contrib.auth.views import login
+from django.contrib.auth.forms import AuthenticationForm
+from django.db import transaction
 
 from registration.backends import get_backend
+from registration.forms import MyLoginForm
 
 
 def activate(request, backend,
@@ -206,3 +210,18 @@ def register(request, backend, success_url=None, form_class=None,
 
 def direct_to_template(request, template):
     return TemplateView.as_view(template_name=template)(request)
+
+def mylogin(request, template_name):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if not form.is_valid():
+            times = request.session.get('password_wrong_times', 0)
+            times += 1
+            request.session['password_wrong_times'] = times
+            request.session.modified = True
+            transaction.commit_unless_managed()
+    
+    if request.session.get('password_wrong_times', 0) >= 2:
+        return login(request, template_name=template_name, authentication_form=MyLoginForm)
+    else:
+        return login(request, template_name=template_name)

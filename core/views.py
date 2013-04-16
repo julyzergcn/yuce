@@ -22,12 +22,12 @@ def topic_list(request):
 def topic_detail(request, id):
     topic = get_object_or_404(Topic, id=id)
     if request.method == 'POST':
-        form = BetForm(data=request.POST, request=request)
+        form = BetForm(data=request.POST, request=request, topic=topic)
         if form.is_valid():
             form.save(request, topic)
-            return redirect('topic_list')
+            return redirect('topic_detail', id)
     else:
-        form = BetForm(request=request)
+        form = BetForm(request=request, topic=topic)
     context = {
         'topic': topic,
         'form': form,
@@ -36,19 +36,19 @@ def topic_detail(request, id):
 
 @login_required
 def new_topic(request):
-    if not user_can_post_topic(request.user):
-        messages.error(request, _(u'You do not have enough score to post topic'))
+    can, reason = can_post_topic(request.user)
+    if not can:
+        messages.error(request, reason)
         return redirect('home')
     if request.method == 'POST':
         form = TopicCreationForm(data=request.POST, request=request)
         if form.is_valid():
-            form.save(request)
-            return redirect('home')
+            topic = form.save(request)
+            return redirect('topic_detail', topic.id)
     else:
         form = TopicCreationForm(request=request)
     context = {
-        'form': form,
-        'tags': Tag.objects.all(),
+        'form': form
     }
     return render(request, 'core/new_topic.html', context)
 

@@ -6,6 +6,7 @@ Forms and validation code for user registration.
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.forms import AuthenticationForm
 from captcha.fields import CaptchaField
 
 from registration.models import User
@@ -127,4 +128,7 @@ class CaptchaMixin(forms.Form):
     captcha = CaptchaField(label=_('Captcha'))
 
 class MyRegistrationForm(RegistrationFormUniqueEmail, CaptchaMixin, RegistrationFormTermsOfService):
+    pass
+
+class MyLoginForm(AuthenticationForm, CaptchaMixin):
     pass

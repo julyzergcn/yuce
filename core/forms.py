@@ -60,15 +60,17 @@ class TopicCreationForm(forms.Form):
         self.request = request
     
     def clean(self):
-        if self.request and self.request.user.is_staff:
-            raise forms.ValidationError(_('Admin cannot submit topic'))
         data = self.cleaned_data
         if 'deadline' in data and data['deadline'] < timezone.now():
-            raise forms.ValidatorError(_('Deadline is not valid'))
+            raise forms.ValidationError(_('Deadline is not valid'))
         if 'event_close_date' in data and data['event_close_date'] < data['deadline']:
             raise forms.ValidationError(_('Event close date should be after deadline'))
-        if self.request and 'score' in data and data['score'] > self.request.user.score:
-            raise forms.ValidationError(_('You donot have enough score to bet'))
+        
+        if self.request and data.get('yesno') and data.get('score'):
+            can, reason = can_bet(self.request.user, bet_score=data['score'])
+            if not can:
+                raise forms.ValidationError(reason)
+        
         return data
     
     @decorators.method_decorator(transaction.commit_on_success)
@@ -85,7 +87,7 @@ class TopicCreationForm(forms.Form):
             end_weight = data['end_weight'],
         )
         topic.save()
-        user_pay_topic_post(request.user)
+        pay_topic_post(request.user)
         Activity(
             user = request.user,
             action = 'submit topic',
@@ -96,7 +98,7 @@ class TopicCreationForm(forms.Form):
         for tag in data['tags']:
             topic.tags.add(tag)
         
-        if 'score' in data and 'yesno' in data:
+        if data.get('yesno') is not None and data.get('score'):
             bet = Bet(
                 user = request.user,
                 topic = topic,
@@ -105,7 +107,7 @@ class TopicCreationForm(forms.Form):
                 yesno = data['yesno'],
             )
             bet.save()
-            user_pay_bet(request.user, bet)
+            pay_bet(request.user, bet.score)
             Activity(
                 user = request.user,
                 action = 'bet',
@@ -113,21 +115,25 @@ class TopicCreationForm(forms.Form):
                 object_id = topic.id,
                 text = ('yes' if data['yesno'] else 'no') + ' ' + str(data['score'])
             ).save()
+        
+        return topic
 
 class BetForm(forms.Form):
     yesno = MyBooleanField(label=_('Yes/No'))
     score = forms.DecimalField(min_value=0, max_digits=20, decimal_places=8)
     
-    def __init__(self, request=None, **kwargs):
+    def __init__(self, request=None, topic=None, **kwargs):
         super(BetForm, self).__init__(**kwargs)
         self.request = request
+        self.topic = topic
     
     def clean(self):
-        if self.request and self.request.user.is_staff:
-            raise forms.ValidationError(_('Admin cannot bet'))
         data = self.cleaned_data
-        if self.request and 'score' in data and data['score'] > self.request.user.score:
-            raise forms.ValidationError(_('You donot have enough score to bet'))
+        if self.request:
+            can, reason = can_bet(self.request.user, self.topic, data.get('score'))
+            if not can:
+                raise forms.ValidationError(reason)
+        
         return data
     
     @decorators.method_decorator(transaction.commit_on_success)
@@ -141,7 +147,7 @@ class BetForm(forms.Form):
             yesno = data['yesno'],
         )
         bet.save()
-        user_pay_bet(request.user, bet)
+        pay_bet(request.user, bet.score)
         Activity(
             user = request.user,
             action = 'bet',

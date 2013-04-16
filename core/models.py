@@ -117,6 +117,23 @@ class Topic(models.Model):
     
     def current_weight(self):
         return get_current_weight(self)
+    
+    def can_bet(self):
+        if self.status != 'open':
+            return False, _(self.status)
+        
+        if self.event_close_date < timezone.now():
+            mark_event_closed(self)
+            return False, _(self.status)
+        elif self.deadline < timezone.now():
+            mark_deadline(self)
+            return False, _(self.status)
+        
+        return True, ''
+    
+    def can_bet_without_reason(self):
+        can, reason = self.can_bet()
+        return can
 
 class Bet(models.Model):
     user = models.ForeignKey(User)

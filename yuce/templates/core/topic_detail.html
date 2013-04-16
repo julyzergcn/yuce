@@ -25,14 +25,24 @@
 <br>
         <strong>{% trans 'Deadline' %}</strong>: {{ topic.deadline }} ( {{ topic.deadline|naturalday }}  {{ topic.deadline|naturaltime }} )<br>
         <strong>{% trans 'Event Close Date' %}</strong>: {{ topic.event_close_date }} ( {{ topic.event_close_date|naturalday }}  {{ topic.event_close_date|naturaltime }} )<br>
-        <strong>{% trans 'Current Weight' %}</strong>: {{ topic.current_weight}}
+        {% if topic.current_weight %}
+        <strong>{% trans 'Current Weight' %}</strong>: {{ topic.current_weight }}
+        {% endif %}
     </div>
     
     <br>
-    <div>
-        <form method="post" action="">{% csrf_token %}
-            {{ form|bootstrap }}
-            <input type="submit" value="{% trans 'Submit' %}" class="btn" />
-        </form>
-    </div>
+    {% if topic.can_bet_without_reason %}
+    {% if user.is_authenticated %}
+        {% if not user.is_staff %}
+        <div>
+            <form method="post" action="">{% csrf_token %}
+                {{ form|bootstrap }}
+                <input type="submit" value="{% trans 'Submit' %}" class="btn" />
+            </form>
+        </div>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'auth_login' %}?next={{ request.get_full_path }}" class="btn">{% trans 'Login to bet' %}</a>
+    {% endif %}
+    {% endif %}
 {% endblock content %}
