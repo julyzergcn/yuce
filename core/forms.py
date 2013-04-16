@@ -47,7 +47,7 @@ class TopicCreationForm(forms.Form):
     subject_english = forms.CharField(label=_('subject in English'), required=False)
     content = forms.CharField(label=_('content'), widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}))
     content_english = forms.CharField(label=_('content in English'), widget=forms.Textarea(attrs={'style': 'width:400px', 'rows': 4}), required=False)
-    tags = forms.MultipleChoiceField(label=_('tags'), widget=forms.CheckboxSelectMultiple)
+    tags = forms.MultipleChoiceField(label=_('tags'), widget=forms.CheckboxSelectMultiple, required=False)
     event_close_date = forms.DateTimeField(label=_('event close date'))
     deadline = forms.DateTimeField(label=_('deadline'))
     end_weight = forms.IntegerField(label=_('end weight'), min_value=0, initial=getattr(settings, 'TOPIC_END_WEIGHT', 0))
@@ -60,6 +60,8 @@ class TopicCreationForm(forms.Form):
         self.request = request
     
     def clean(self):
+        if self.request and self.request.user.is_staff:
+            raise forms.ValidationError(_('Admin cannot submit topic'))
         data = self.cleaned_data
         if 'deadline' in data and data['deadline'] < timezone.now():
             raise forms.ValidatorError(_('Deadline is not valid'))
@@ -121,6 +123,8 @@ class BetForm(forms.Form):
         self.request = request
     
     def clean(self):
+        if self.request and self.request.user.is_staff:
+            raise forms.ValidationError(_('Admin cannot bet'))
         data = self.cleaned_data
         if self.request and 'score' in data and data['score'] > self.request.user.score:
             raise forms.ValidationError(_('You donot have enough score to bet'))

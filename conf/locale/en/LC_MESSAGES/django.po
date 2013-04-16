@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-15 23:32+0800\n"
+"POT-Creation-Date: 2013-04-16 10:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: .\core\forms.py:46 .\core\models.py:85
+#: .\core\forms.py:46 .\core\models.py:89
 msgid "subject"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgstr ""
 msgid "subject in English"
 msgstr ""
 
-#: .\core\forms.py:48 .\core\models.py:87
+#: .\core\forms.py:48 .\core\models.py:91
 msgid "content"
 msgstr ""
 
@@ -44,143 +44,151 @@ msgstr ""
 msgid "content in English"
 msgstr ""
 
-#: .\core\forms.py:50 .\core\models.py:90
+#: .\core\forms.py:50 .\core\models.py:94
 msgid "tags"
 msgstr ""
 
-#: .\core\forms.py:51 .\core\models.py:93
+#: .\core\forms.py:51 .\core\models.py:97
 msgid "event close date"
 msgstr ""
 
-#: .\core\forms.py:52 .\core\models.py:70 .\core\models.py:92
+#: .\core\forms.py:52 .\core\models.py:74 .\core\models.py:96
 msgid "deadline"
 msgstr ""
 
-#: .\core\forms.py:53 .\core\models.py:95
+#: .\core\forms.py:53 .\core\models.py:99
 msgid "end weight"
 msgstr ""
 
-#: .\core\forms.py:54 .\core\forms.py:116 .\core\models.py:122
+#: .\core\forms.py:54 .\core\forms.py:118 .\core\models.py:126
 msgid "Yes/No"
 msgstr ""
 
-#: .\core\forms.py:55 .\core\models.py:14 .\core\models.py:120
+#: .\core\forms.py:55 .\core\models.py:14 .\core\models.py:124
 msgid "score"
 msgstr ""
 
-#: .\core\forms.py:65
-msgid "Deadline is not valid"
+#: .\core\forms.py:64
+msgid "Admin cannot submit topic"
 msgstr ""
 
 #: .\core\forms.py:67
+msgid "Deadline is not valid"
+msgstr ""
+
+#: .\core\forms.py:69
 msgid "Event close date should be after deadline"
 msgstr ""
 
-#: .\core\forms.py:69 .\core\forms.py:126
+#: .\core\forms.py:71 .\core\forms.py:130
 msgid "You donot have enough score to bet"
 msgstr ""
 
-#: .\core\models.py:24
-msgid "login"
+#: .\core\forms.py:127
+msgid "Admin cannot bet"
 msgstr ""
 
 #: .\core\models.py:25
-msgid "change password"
+msgid "login"
 msgstr ""
 
 #: .\core\models.py:26
-msgid "change fund password"
+msgid "change password"
 msgstr ""
 
 #: .\core\models.py:27
-msgid "change email"
+msgid "change fund password"
 msgstr ""
 
 #: .\core\models.py:28
-msgid "bet"
+msgid "change email"
 msgstr ""
 
 #: .\core\models.py:29
-msgid "submit topic"
+msgid "bet"
 msgstr ""
 
 #: .\core\models.py:30
-msgid "deposit"
+msgid "submit topic"
 msgstr ""
 
 #: .\core\models.py:31
+msgid "deposit"
+msgstr ""
+
+#: .\core\models.py:32
 msgid "withdraw"
 msgstr ""
 
-#: .\core\models.py:34
+#: .\core\models.py:35
 msgid "approve topic"
 msgstr ""
 
-#: .\core\models.py:35
+#: .\core\models.py:36
 msgid "reject topic"
 msgstr ""
 
-#: .\core\models.py:36
+#: .\core\models.py:37
 msgid "close topic"
 msgstr ""
 
-#: .\core\models.py:37
+#: .\core\models.py:38
 msgid "cancel topic"
 msgstr ""
 
-#: .\core\models.py:38
+#: .\core\models.py:39
 msgid "modify topic"
 msgstr ""
 
-#: .\core\models.py:39
+#: .\core\models.py:40
 msgid "modify user"
 msgstr ""
 
-#: .\core\models.py:54
+#: .\core\models.py:55
 msgid "Activities"
 msgstr ""
 
-#: .\core\models.py:68
+#: .\core\models.py:72
 msgid "pending"
 msgstr ""
 
-#: .\core\models.py:69
+#: .\core\models.py:73
 msgid "open"
 msgstr ""
 
-#: .\core\models.py:71
+#: .\core\models.py:75
 msgid "event closed"
 msgstr ""
 
-#: .\core\models.py:72
+#: .\core\models.py:76
 msgid "completed"
 msgstr ""
 
-#: .\core\models.py:73
+#: .\core\models.py:77
 msgid "cancelled"
 msgstr ""
 
-#: .\core\models.py:74
+#: .\core\models.py:78
 msgid "rejected"
 msgstr ""
 
-#: .\core\models.py:86
+#: .\core\models.py:90
 msgid "subject in english"
 msgstr ""
 
-#: .\core\models.py:88
+#: .\core\models.py:92
 msgid "content in english"
 msgstr ""
 
-#: .\core\models.py:89
+#: .\core\models.py:93
 msgid "status"
 msgstr ""
 
-#: .\core\models.py:121
+#: .\core\models.py:125
 msgid "weight"
 msgstr ""
 
-#: .\core\views.py:39
+#: .\core\views.py:40
 msgid "You do not have enough score to post topic"
 msgstr ""
 
