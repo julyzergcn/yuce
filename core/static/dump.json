@@ -1,0 +1,283 @@
+[
+{
+    "pk": 3, 
+    "model": "core.user", 
+    "fields": {
+        "user_permissions": [], 
+        "last_name": "", 
+        "is_active": true, 
+        "password": "pbkdf2_sha256$10000$qPeY4hlWXU53$wZv6UJuMd84b12DWXaXBd+23VTREvcBdKzNnVzB0Z4M=", 
+        "date_joined": "2013-04-15T17:00:28.452Z", 
+        "username": "bbb", 
+        "is_superuser": false, 
+        "groups": [], 
+        "email": "85430505@qq.com", 
+        "last_login": "2013-04-15T17:08:48.071Z", 
+        "is_staff": false, 
+        "score": "905.50000000", 
+        "first_name": ""
+    }
+},
+{
+    "pk": 1, 
+    "model": "core.user", 
+    "fields": {
+        "user_permissions": [], 
+        "last_name": "", 
+        "is_active": true, 
+        "password": "pbkdf2_sha256$10000$eTmKb8ojSvuV$/IrwkWr5zOr4bQdARX1rCgBOggL8mzzwnypr/T08+2c=", 
+        "date_joined": "2013-04-15T15:46:06.023Z", 
+        "username": "Yuce", 
+        "is_superuser": true, 
+        "groups": [], 
+        "email": "yuce_yuce@yeah.net", 
+        "last_login": "2013-04-16T00:55:18.490Z", 
+        "is_staff": true, 
+        "score": "1231.49999999", 
+        "first_name": ""
+    }
+},
+{
+    "pk": 2, 
+    "model": "core.user", 
+    "fields": {
+        "user_permissions": [], 
+        "last_name": "", 
+        "is_active": true, 
+        "password": "pbkdf2_sha256$10000$9IuuWfT3L18y$poIkX28rrduSmwq2m9vECyNG0S2fHQW98sktQx3C6WM=", 
+        "date_joined": "2013-04-15T16:30:32.719Z", 
+        "username": "aaa", 
+        "is_superuser": false, 
+        "groups": [], 
+        "email": "snoleo@qq.com", 
+        "last_login": "2013-04-15T17:07:46.248Z", 
+        "is_staff": false, 
+        "score": "853.00000001", 
+        "first_name": ""
+    }
+},
+{
+    "pk": 1, 
+    "model": "core.topic", 
+    "fields": {
+        "event_close_date": "2013-04-29T16:00:00Z", 
+        "deadline": "2013-04-26T16:00:00Z", 
+        "complete_date": null, 
+        "end_weight": 10000, 
+        "tags": [
+            1, 
+            2, 
+            5
+        ], 
+        "status": "open", 
+        "user": 1, 
+        "content_english": "Can this site succeed?", 
+        "subject_english": "Can this site succeed?", 
+        "subject": "\u8fd9\u4e2a\u7f51\u7ad9\u80fd\u529e\u6210\u529f\u5417\uff1f", 
+        "created_date": "2013-04-15T15:50:16.254Z", 
+        "content": "\u5982\u9898"
+    }
+},
+{
+    "pk": 2, 
+    "model": "core.topic", 
+    "fields": {
+        "event_close_date": "2013-04-30T15:59:00Z", 
+        "deadline": "2013-04-26T16:00:00Z", 
+        "complete_date": null, 
+        "end_weight": 2, 
+        "tags": [], 
+        "status": "open", 
+        "user": 2, 
+        "content_english": "", 
+        "subject_english": "", 
+        "subject": "NK\u5c06\u57284\u6708\u4efd\u5411J\u53d1\u5c04\u5bfc\u5f39", 
+        "created_date": "2013-04-15T16:40:50Z", 
+        "content": "NK\u5c06\u57284\u670830\u65e5\u4e4b\u524d\u5411J\u53d1\u5c04\u5bfc\u5f39"
+    }
+},
+{
+    "pk": 4, 
+    "model": "core.topic", 
+    "fields": {
+        "event_close_date": "2013-04-16T02:00:00Z", 
+        "deadline": "2013-04-15T17:20:00Z", 
+        "complete_date": null, 
+        "end_weight": 3, 
+        "tags": [
+            1
+        ], 
+        "status": "open", 
+        "user": 3, 
+        "content_english": "", 
+        "subject_english": "", 
+        "subject": "4\u670816\u65e5\u4e0a\u534812\u70b9\u5317\u4eac\u4e2d\u5173\u6751\u4e0b\u96e8", 
+        "created_date": "2013-04-15T17:04:35Z", 
+        "content": "\u5982\u679c4\u670816\u65e5\u4e0a\u534812\u70b9\u5317\u4eac\u4e2d\u5173\u6751\u4e0b\u96e8, \u5219\u6b64\u8bdd\u9898\u4e3aYes"
+    }
+},
+{
+    "pk": 3, 
+    "model": "core.topic", 
+    "fields": {
+        "event_close_date": "2013-04-30T15:59:00Z", 
+        "deadline": "2013-04-26T16:00:00Z", 
+        "complete_date": null, 
+        "end_weight": 2, 
+        "tags": [
+            4
+        ], 
+        "status": "rejected", 
+        "user": 2, 
+        "content_english": "", 
+        "subject_english": "", 
+        "subject": "NK\u5c06\u57284\u6708\u4efd\u5411J\u53d1\u5c04\u5bfc\u5f39", 
+        "created_date": "2013-04-15T16:41:01.860Z", 
+        "content": "NK\u5c06\u57284\u670830\u65e5\u4e4b\u524d\u5411J\u53d1\u5c04\u5bfc\u5f39"
+    }
+},
+{
+    "pk": 1, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 100000, 
+        "user": 1, 
+        "topic": 1, 
+        "created_date": "2013-04-15T15:50:16.343Z", 
+        "score": "11.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 2, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 99977, 
+        "user": 1, 
+        "topic": 1, 
+        "created_date": "2013-04-15T15:54:39.498Z", 
+        "score": "2.00000000", 
+        "yesno": false
+    }
+},
+{
+    "pk": 3, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 99755, 
+        "user": 2, 
+        "topic": 1, 
+        "created_date": "2013-04-15T16:33:57.455Z", 
+        "score": "4.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 5, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 100000, 
+        "user": 2, 
+        "topic": 3, 
+        "created_date": "2013-04-15T16:41:01.897Z", 
+        "score": "2.00000000", 
+        "yesno": false
+    }
+},
+{
+    "pk": 6, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 99892, 
+        "user": 2, 
+        "topic": 2, 
+        "created_date": "2013-04-15T16:57:48.296Z", 
+        "score": "10.12345678", 
+        "yesno": true
+    }
+},
+{
+    "pk": 7, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 99886, 
+        "user": 2, 
+        "topic": 2, 
+        "created_date": "2013-04-15T16:58:05.055Z", 
+        "score": "0.87654321", 
+        "yesno": false
+    }
+},
+{
+    "pk": 8, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 99860, 
+        "user": 3, 
+        "topic": 2, 
+        "created_date": "2013-04-15T17:02:32.890Z", 
+        "score": "4.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 9, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 100000, 
+        "user": 3, 
+        "topic": 4, 
+        "created_date": "2013-04-15T17:04:35.976Z", 
+        "score": "30.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 10, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 73334, 
+        "user": 2, 
+        "topic": 4, 
+        "created_date": "2013-04-15T17:08:22.507Z", 
+        "score": "100.00000000", 
+        "yesno": false
+    }
+},
+{
+    "pk": 11, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 73334, 
+        "user": 2, 
+        "topic": 4, 
+        "created_date": "2013-04-15T17:08:31.357Z", 
+        "score": "10.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 12, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 66667, 
+        "user": 3, 
+        "topic": 4, 
+        "created_date": "2013-04-15T17:09:01.703Z", 
+        "score": "50.00000000", 
+        "yesno": true
+    }
+},
+{
+    "pk": 13, 
+    "model": "core.bet", 
+    "fields": {
+        "weight": 0, 
+        "user": 3, 
+        "topic": 4, 
+        "created_date": "2013-04-16T00:52:15.279Z", 
+        "score": "0.50000000", 
+        "yesno": true
+    }
+}
+]
