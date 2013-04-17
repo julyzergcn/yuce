@@ -11,7 +11,7 @@
 {% block content %}
     <ul>
     {% for topic in topics %}
-        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</li>
+        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
     {% endfor %}
     </ul>
 {% endblock content %}
