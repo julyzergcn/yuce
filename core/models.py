@@ -117,6 +117,9 @@ class Topic(models.Model):
     def no_score(self):
         return self.score_for_bet('no')
     
+    def bet_score(self):
+        return self.yes_score() + self.no_score()
+    
     def current_weight(self):
         return get_current_weight(self)
     

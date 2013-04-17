@@ -11,7 +11,16 @@ from core.util import *
 
 
 def index(request):
-    return render(request, 'index.html')
+    open_topics = Topic.objects.filter(status='open')
+    hot_topics = sorted(list(open_topics), key=lambda t: t.bet_score(), reverse=True)
+    context = {
+        'deadline_topics': open_topics.order_by('-deadline'),
+        'hot_topics': hot_topics,
+        'new_topics': open_topics.order_by('created_date'),
+        'new_bets': Bet.objects.all().order_by('created_date'),
+        
+    }
+    return render(request, 'index.html', context)
 
 def topic_list(request):
     context = {
