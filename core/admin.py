@@ -8,7 +8,7 @@ from django import http
 
 from core.models import *
 from core.forms import *
-
+from core.util import *
 
 #~ admin.site.register(Permission)
 
@@ -39,7 +39,7 @@ admin.site.register(Activity,
 admin.site.register(Tag)
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'status', 'created_date', 'deadline', 'event_close_date', 'complete_date')
+    list_display = ('subject', 'status', 'created_date', 'deadline', 'event_close_date', 'complete_date', 'yesno')
     list_filter = ('status', )
     
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -73,7 +73,7 @@ class TopicAdmin(admin.ModelAdmin):
                 if new_text == text:
                     self.message_user(request, _('Error! Leave a note why you reject the topic'), level=messages.ERROR)
                     return http.HttpResponseRedirect(request.get_full_path())
-            elif status != 'cancelled' and new_status == 'cancelled':
+            if status != 'cancelled' and new_status == 'cancelled':
                 if new_text == text:
                     self.message_user(request, _('Error! Leave a note why you cancel the topic'), level=messages.ERROR)
                     return http.HttpResponseRedirect(request.get_full_path())
@@ -100,13 +100,18 @@ class TopicAdmin(admin.ModelAdmin):
                     action = 'approve topic'
                 elif original_status == 'pending' and new_status == 'rejected':
                     action = 'reject topic'
-                    # TODO: give back score to the joined users
+                    # give back score to the topic submitter
+                    give_back_score(obj)
                 elif new_status == 'cancelled':
                     action = 'cancel topic'
-                    # TODO: give back score to the joined users
+                    # Not give back score to the joined users
+                    #~ give_back_score(obj)
             elif hasattr(self, 'should_be_completed') and self.should_be_completed:
                 obj.status = 'completed'
+                obj.complete_date = timezone.now()
                 action = 'close topic'
+                # give divided profit to joined users
+                divide_profit(obj)
             
             Activity(
                 user = request.user,
@@ -120,5 +125,5 @@ class TopicAdmin(admin.ModelAdmin):
 admin.site.register(Topic, TopicAdmin)
 
 admin.site.register(Bet,
-    list_display = ('created_date', 'user', 'yesno', 'topic', 'score', 'weight'),
+    list_display = ('created_date', 'user', 'yesno', 'topic', 'score', 'weight', 'profit'),
 )

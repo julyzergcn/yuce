@@ -52,18 +52,19 @@
 <div class="row-fluid" style="margin-top:20px">
     <div class="span6 thumbnail" style="background-color:#eee;padding:10px 20px">
     <h5>最新下注：</h5>
-        <table width="100%">
+        <ul style="margin: 0 0 10px 15px">
             {% for bet in new_bets|slice:':10' %}
-                <tr><td><a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a></td><td>{{ bet.score }}</td><td>{{ bet.yesno }}</td></tr>
+                <li style="list-style-type:none"><img src="{% if bet.yesno %}{{ STATIC_URL }}admin/img/icon-yes.gif{% else %}{{ STATIC_URL }}admin/img/icon-no.gif{% endif %}">
+                {{ bet.score }} on <a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a></li>
             {% endfor %}
-        </table>
+        </ul>
     </div>
     
     <div class="span6 thumbnail" style="background-color:#eee;padding:10px 20px">
     <h5>最近赢取的大额积分：</h5>
         <ul>
-            {% for topic in new_topics|slice:':10' %}
-                <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
+            {% for bet in profit_bets|slice:':10' %}
+                <li>{{ bet.profit }} {% trans 'gained on' %} <a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a></li>
             {% endfor %}
         </ul>
     </div>

@@ -1,8 +1,18 @@
 #coding=utf-8
 
+import djcelery
+djcelery.setup_loader()
+
+BROKER_URL = 'django://'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
 TOPIC_START_WEIGHT = 10**5
 TOPIC_END_WEIGHT = 10**4
 TOPIC_POST_COST = 10
+TOPIC_EVENT_CLOSED_EMAILS = []
+# when topic is completed, divide the profit to site and the topic submitter
+SITE_WIN_RATE = 0.1
+SUBMITTER_WIN_RATE = 0.1
 
 DATE_FORMAT = 'n/j/y'
 DATETIME_FORMAT = 'n/j/y H:i'
@@ -12,6 +22,7 @@ EMAIL_HOST_USER = 'yuce_yuce@yeah.net'
 EMAIL_HOST_PASSWORD = 'Yuce321'
 EMAIL_PORT = 25
 DEFAULT_FROM_EMAIL = 'yuce_yuce@yeah.net'
+
 
 from os.path import dirname, join, abspath
 
@@ -151,6 +162,8 @@ INSTALLED_APPS = (
     'south',
     'registration',
     'captcha',
+    'djcelery',
+    'kombu.transport.django',
     'core',
 )
 

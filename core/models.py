@@ -125,24 +125,22 @@ class Topic(models.Model):
     
     def save(self, **kwargs):
         super(Topic, self).save(**kwargs)
-        
-        if self.event_close_date < timezone.now():
-            mark_event_closed(self)
-        elif self.deadline < timezone.now():
-            mark_deadline(self)
+        self.update_status(for_save_method=True)
+    
+    def update_status(self, for_save_method=False):
+        if self.status in ('open', 'deadline'):
+            if self.event_close_date < timezone.now():
+                mark_event_closed(self)
+            elif self.deadline < timezone.now():
+                if self.status == 'open':
+                    mark_deadline(self)
+            elif for_save_method:
+                mark_deadline.apply_async((self, ), eta=self.deadline)
+                mark_event_closed.apply_async((self, ), eta=self.event_close_date)
     
     def can_bet(self):
-        if self.status != 'open':
-            return False, _(self.status)
-        
-        if self.event_close_date < timezone.now():
-            mark_event_closed(self)
-            return False, _(self.status)
-        elif self.deadline < timezone.now():
-            mark_deadline(self)
-            return False, _(self.status)
-        
-        return True, ''
+        self.update_status()
+        return (True, '') if self.status=='open' else(False, _(self.status))
     
     def can_bet_without_reason(self):
         can, reason = self.can_bet()
@@ -155,6 +153,7 @@ class Bet(models.Model):
     weight = models.PositiveIntegerField(_('weight'))
     yesno = models.BooleanField(_('Yes/No'))
     created_date = models.DateTimeField(default=timezone.now)
+    profit = models.DecimalField(_('profit'), max_digits=20, decimal_places=8, default=0)
     
     def __unicode__(self):
         return u'%s %s %s %s'%(self.user, self.topic, self.yesno, self.score)

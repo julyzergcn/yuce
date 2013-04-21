@@ -14,11 +14,11 @@ def index(request):
     open_topics = Topic.objects.filter(status='open')
     hot_topics = sorted(list(open_topics), key=lambda t: t.bet_score(), reverse=True)
     context = {
-        'deadline_topics': open_topics.order_by('-deadline'),
+        'deadline_topics': open_topics.order_by('deadline'),
         'hot_topics': hot_topics,
-        'new_topics': open_topics.order_by('created_date'),
-        'new_bets': Bet.objects.all().order_by('created_date'),
-        
+        'new_topics': open_topics.order_by('-created_date'),
+        'new_bets': Bet.objects.all().order_by('-created_date'),
+        'profit_bets': Bet.objects.all().order_by('-profit').exclude(profit=0),
     }
     return render(request, 'index.html', context)
 
