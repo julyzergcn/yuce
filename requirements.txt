@@ -5,6 +5,7 @@ django-endless-pagination
 django-extensions
 django-bootstrap-form
 django-simple-captcha
+django-celery
 
 dj-database-url
 django-reset
