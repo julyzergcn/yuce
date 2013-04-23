@@ -17,7 +17,7 @@ def index(request):
         'deadline_topics': open_topics.order_by('deadline'),
         'hot_topics': hot_topics,
         'new_topics': open_topics.order_by('-created_date'),
-        'new_bets': Bet.objects.all().order_by('-created_date'),
+        'new_bets': Bet.objects.filter(topic__status='open').order_by('-created_date'),
         'profit_bets': Bet.objects.all().order_by('-profit').exclude(profit=0),
     }
     return render(request, 'index.html', context)
