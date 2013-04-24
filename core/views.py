@@ -68,7 +68,15 @@ def archived_topics(request):
     return render(request, 'core/archived_topics.html', context)
 
 def search(request):
-    return redirect('home')
+    if request.method == 'POST':
+        form = SearchForm(request=request, data=request.POST)
+    else:
+        form = SearchForm(request=request)
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'core/search.html', context)
 
 def dumpdata(request):
     response = http.HttpResponse()

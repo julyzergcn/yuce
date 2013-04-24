@@ -155,6 +155,7 @@ class BetForm(forms.Form):
         )
         bet.save()
         pay_bet(request.user, bet.score)
+
         Activity(
             user = request.user,
             action = 'bet',
@@ -163,4 +164,13 @@ class BetForm(forms.Form):
             text = ('yes' if data['yesno'] else 'no') + ' ' + str(data['score'])
         ).save()
 
-    
+class SearchForm(forms.Form):
+    text = forms.CharField(label=_('Search'), required=False)
+    category = forms.ChoiceField(label=_('Category'), required=False)
+    status = forms.ChoiceField(label=_('Status'), required=False)
+
+    def __init__(self, request=None, **kwargs):
+        super(SearchForm, self).__init__(kwargs)
+        self.request = request
+        self.fields['category'].choices = [(t.id, t.tag) for t in Tag.objects.all()]
+        self.fields['status'].choices = STATUSES

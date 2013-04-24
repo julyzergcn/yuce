@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap %}
+
+{% block navbar %}
+    {{ block.super }}
+    <script type="text/javascript">
+    document.getElementById('topics').className = 'active';
+    </script>
+{% endblock navbar %}
+
+{% block content %}
+<h3>{% trans 'Search topics' %}</h3>
+<form method="post" action="">{% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">&times;</a>
+            {% for non_field_error in form.non_field_errors %}
+                 {{ non_field_error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+  {{ form|bootstrap }}
+  <input type="submit" value="{% trans 'Search' %}" />
+</form>
+{% endblock content %}
+
