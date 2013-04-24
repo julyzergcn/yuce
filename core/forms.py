@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.db.models.query import Q
 
 from core.models import *
 from core.util import *
@@ -165,12 +166,34 @@ class BetForm(forms.Form):
         ).save()
 
 class SearchForm(forms.Form):
-    text = forms.CharField(label=_('Search'), required=False)
+    keywords = forms.CharField(label=_('Search'), required=False)
     category = forms.ChoiceField(label=_('Category'), required=False)
-    status = forms.ChoiceField(label=_('Status'), required=False)
+    status = forms.ChoiceField(label=_('Status'), required=False, initial='open')
 
-    def __init__(self, request=None, **kwargs):
-        super(SearchForm, self).__init__(kwargs)
-        self.request = request
-        self.fields['category'].choices = [(t.id, t.tag) for t in Tag.objects.all()]
-        self.fields['status'].choices = STATUSES
+    def __init__(self, **kwargs):
+        super(SearchForm, self).__init__(**kwargs)
+        self.fields['category'].choices = [('all',_('All'))]+[(t.tag, t.tag) for t in Tag.objects.all()]
+        self.fields['status'].choices = [('all',_('All')),('open', _('open')),('deadline', _('deadline')),('event closed', _('event closed')),('completed', _('completed'))]
+    
+    def search(self):
+        data = self.cleaned_data
+        
+        keywords = data.get('keywords', '')
+        query = Q()
+        for kw in keywords.split():
+            query |= Q(subject__icontains = kw)
+            query |= Q(subject_english__icontains = kw)
+            query |= Q(content__icontains = kw)
+            query |= Q(content_english__icontains = kw)
+        
+        category = data.get('category', 'all')
+        if category != 'all':
+            query &= Q(tags__tag = category)
+        
+        status = data.get('status', 'open')
+        if status != 'all':
+            query &= Q(status = status)
+        
+        self.search_results = Topic.objects.filter(query)
+        return self.search_results
+

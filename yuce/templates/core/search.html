@@ -8,6 +8,12 @@
     </script>
 {% endblock navbar %}
 
+{% block extra_head %}
+<style type="text/css">
+.search-topics select {width: 100%}
+</style>
+{% endblock %}
+
 {% block content %}
 <h3>{% trans 'Search topics' %}</h3>
 <form method="post" action="">{% csrf_token %}
@@ -20,8 +26,33 @@
         </div>
     {% endif %}
 
-  {{ form|bootstrap }}
-  <input type="submit" value="{% trans 'Search' %}" />
+  <div class="row-fluid search-topics">
+    <div class="span4">{{ form.keywords|bootstrap }}</div>
+    <div class="span3">{{ form.category|bootstrap }}</div>
+    <div class="span3">{{ form.status|bootstrap }}</div>
+    <div class="span2"><label>&nbsp;</label><input type="submit" value="{% trans 'Search' %}" class="btn btn-primary" /></div>
+  </div>
 </form>
+
+<div>
+<table class="table">
+<tr>
+    <th>{% trans 'Subject' %}</th>
+    <th><a href="?c=cd&o={{ o}}">{% trans 'Created date' %}</a> {% if c == 'cd' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=dd&o={{ o}}">{% trans 'Deadline' %}</a> {% if c == 'dd' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=ed&o={{ o}}">{% trans 'Event close date' %}</a> {% if c == 'ed' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=bt&o={{ o}}">{% trans 'Bet' %}</a> {% if c == 'bt' %}{{ arrow|safe }}{% endif %}</th>
+</tr>
+{% for topic in topics %}
+    <tr>
+    <td>{{ topic.subject }}</td>
+    <td>{{ topic.created_date }}</td>
+    <td>{{ topic.deadline }}</td>
+    <td>{{ topic.event_close_date }}</td>
+    <td>{{ topic.bet_score }}</td>
+    </tr>
+{% endfor %}
+</table>
+</div>
 {% endblock content %}
 

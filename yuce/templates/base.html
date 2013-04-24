@@ -24,7 +24,10 @@
                         {% block topnav %}
                         <li>
                             <form method="post" action="{% url 'search' %}">
-                                <input type="text" name="kw" style="width: 100px; height: 15px; margin-bottom: -13px; border-radius:11px; padding-left:8px;" placeholder="Search" />
+                                {% csrf_token %}
+                                <input type="text" name="keywords" style="width: 100px; height: 15px; margin-bottom: -13px; border-radius:11px; padding-left:8px;" placeholder="Search" />
+                                <input type="hidden" name="status" value="open" />
+                                <input type="hidden" name="category" value="all" />
                             </form>
                         </li>
                         <li>&nbsp;&nbsp;</li>

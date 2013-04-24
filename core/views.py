@@ -69,12 +69,32 @@ def archived_topics(request):
 
 def search(request):
     if request.method == 'POST':
-        form = SearchForm(request=request, data=request.POST)
+        form = SearchForm(data=request.POST)
+        if form.is_valid():
+            topics = form.search()
     else:
-        form = SearchForm(request=request)
+        form = SearchForm()
+        topics = Topic.objects.filter(status='open')
+    
+    order = request.REQUEST.get('o', 'desc')
+    column = request.REQUEST.get('c', 'cd')
+    if column == 'bt':  # bet scores
+        topics = sorted(list(topics), key=lambda t: t.bet_score(),
+                    reverse={'asc': False, 'desc': True}.get(order, True))
+    else:
+        order_by = {'asc': '', 'desc': '-'}.get(order, '-')+\
+                                        {  'cd': 'created_date',
+                                            'dd': 'deadline',
+                                            'ed': 'event_close_date'
+                                        }.get(column, 'created_date')
+        topics = topics.order_by(order_by)
     
     context = {
         'form': form,
+        'topics': topics,
+        'o': {'asc': 'desc', 'desc': 'asc'}.get(order, 'desc'),
+        'c': column,
+        'arrow': {'asc': '&uarr;', 'desc': '&darr;'}.get(order, '&darr;'),
     }
     return render(request, 'core/search.html', context)
 
