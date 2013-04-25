@@ -197,3 +197,9 @@ class SearchForm(forms.Form):
         self.search_results = Topic.objects.filter(query)
         return self.search_results
 
+class EmailChangeForm(forms.Form):
+    email = forms.EmailField(label=_('New Email'))
+    
+    def save(self, user):
+        user.email = self.cleaned_data['email']
+        user.save(update_fields=['email'])

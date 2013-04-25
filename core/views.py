@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
+from django.contrib.auth.forms import PasswordChangeForm
 
 from core.models import *
 from core.forms import *
@@ -108,3 +109,32 @@ def dumpdata(request):
     json = serialize('json', lst, indent=4)
     response.write(json)
     return response
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        if request.POST.get('change_type') == 'email':
+            email_form = EmailChangeForm(request.POST)
+            password_form = PasswordChangeForm(request.user)
+            if email_form.is_valid():
+                email_form.save(request.user)
+                messages.success(request, _('Email is changed'))
+                return redirect('my_profile')
+        elif request.POST.get('change_type') == 'password':
+            email_form = EmailChangeForm(initial={'email': request.user.email})
+            password_form = PasswordChangeForm(request.user, data=request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                messages.success(request, _('password is changed'))
+                return redirect('my_profile')
+    else:
+        email_form = EmailChangeForm(initial={'email': request.user.email})
+        password_form = PasswordChangeForm(request.user)
+    context = {
+        'email_form': email_form,
+        'password_form': password_form,
+        'my_topics': Topic.objects.filter(user=request.user),
+        'my_bets': Bet.objects.filter(user=request.user),
+    }
+    return render(request, 'core/profile.html', context)
+

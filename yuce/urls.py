@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^i18n/', include('django.conf.urls.i18n')),
     
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'^accounts/profile/$', RedirectView.as_view(url='/'), name='my_profile'),
+    #~ url(r'^accounts/profile/$', RedirectView.as_view(url='/'), name='my_profile'),
     
     url(r'^about/$', TemplateView.as_view(template_name='about.html'), name='about'),
     url(r'^contact/$', TemplateView.as_view(template_name='contact.html'), name='contact'),

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap %}
+
+{% block navbar %}
+    {{ block.super }}
+    <script type="text/javascript">
+    document.getElementById('home').className = 'active';
+    </script>
+{% endblock navbar %}
+
+{% block extra_head %}
+<style type="text/css">
+.profile-menu {border-radius:5px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);padding:0;}
+.profile-menu li a {border: 1px solid #E5E5E5;margin: 0 0 -1px;}
+.affix {top:60px; width:160px}
+.affix-top {margin-top:30px}
+.mt30 {margin-top: 30px}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid">
+<div class="span3">
+    <ul class="nav nav-list profile-menu" data-spy="affix" data-offset-top="30">
+        <li><a href="#change_email">{% trans 'Change Email' %}</a></li>
+        <li><a href="#change_password">{% trans 'Change Password' %}</a></li>
+        <li><a href="#my_topics">{% trans 'My Topics' %}</a></li>
+        <li><a href="#my_bets">{% trans 'My Bets' %}</a></li>
+    </ul>
+</div>
+
+<div class="span9">
+    <h3>{% trans 'My profile' %}</h3>
+    
+    <div id="change_email" class="mt30">
+        <form method="post" action="" class="form-horizontal">
+            {% csrf_token %}
+            <legend>{% trans 'Change Email' %}</legend>
+            {{ email_form|bootstrap }}
+            <input type="hidden" name="change_type" value="email" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{% trans 'Submit' %}" class="btn" />
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div id="change_password" class="mt30">
+        <form method="post" action="" class="form-horizontal">
+            {% csrf_token %}
+            <legend>{% trans 'Change Password' %}</legend>
+            {{ password_form|bootstrap }}
+            <input type="hidden" name="change_type" value="password" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{% trans 'Submit' %}" class="btn" />
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div id="my_topics" class="mt30">
+        <legend>{% trans 'My Topics' %}</legend>
+        <ul>
+            {% for topic in my_topics %}
+                <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div id="my_bets" class="mt30">
+        <legend>{% trans 'My Bets' %}</legend>
+        <ul>
+            {% for bet in my_bets %}
+                <li style="list-style-type:none"><img src="{% if bet.yesno %}{{ STATIC_URL }}admin/img/icon-yes.gif{% else %}{{ STATIC_URL }}admin/img/icon-no.gif{% endif %}">
+                {{ bet.score }} on <a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a> {{ bet.created_date }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+</div>
+
+{% endblock content %}
+

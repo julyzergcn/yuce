@@ -13,6 +13,9 @@
         <link href="{{ STATIC_URL }}jquery-ui/jquery-ui.min.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}styles.css" rel="stylesheet">
         
+        <style type="text/css">
+            .masthead .nav-pills li a {padding-top:5px; padding-bottom:5px; color:#777777}
+        </style>
         {% block extra_head %}{% endblock %}
     </head>
     <body>
@@ -23,9 +26,13 @@
                     <ul class="nav nav-pills pull-right">
                         {% block topnav %}
                         <li>
-                            <form method="post" action="{% url 'search' %}">
+                            <form method="post" action="{% url 'search' %}" class="form-search" style="margin-bottom:0">
                                 {% csrf_token %}
-                                <input type="text" name="keywords" style="width: 100px; height: 15px; margin-bottom: -13px; border-radius:11px; padding-left:8px;" placeholder="Search" />
+                                <div class="input-append">
+                                    <input type="text" name="keywords" style="width: 130px;" class="search-query" />
+                                    <button type="submit" class="btn"><i class="icon-search"></i></button>
+                                </div>
+                     <!--           <input type="text" name="keywords" style="width: 100px; height: 15px; margin-bottom: -13px; border-radius:11px; padding-left:8px;" placeholder="Search" />-->
                                 <input type="hidden" name="status" value="open" />
                                 <input type="hidden" name="category" value="all" />
                             </form>
@@ -33,7 +40,7 @@
                         <li>&nbsp;&nbsp;</li>
                         
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'my_profile' %}">{{ user.username }}</a></li>
+                            <li><a href="{% url 'my_profile' %}"><i class="icon-user"></i> {{ user.username }}</a></li>
                             <li><a href="{% url 'auth_logout' %}">{% trans 'Logout' %}</a></li>
                         {% else %}
                             <li><a href="{% url 'auth_login' %}">{% trans 'Log in' %}</a></li>
