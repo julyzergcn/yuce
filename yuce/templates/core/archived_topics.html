@@ -9,9 +9,25 @@
 {% endblock navbar %}
 
 {% block content %}
-    <ul>
-    {% for topic in topics %}
-        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
-    {% endfor %}
-    </ul>
+
+<div>
+<table class="table">
+<tr>
+    <th>{% trans 'Subject' %}</th>
+    <th><a href="?c=cd&o={{ o}}">{% trans 'Created date' %}</a> {% if c == 'cd' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=dd&o={{ o}}">{% trans 'Deadline' %}</a> {% if c == 'dd' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=ed&o={{ o}}">{% trans 'Event close date' %}</a> {% if c == 'ed' %}{{ arrow|safe }}{% endif %}</th>
+    <th><a href="?c=bt&o={{ o}}">{% trans 'Bet' %}</a> {% if c == 'bt' %}{{ arrow|safe }}{% endif %}</th>
+</tr>
+{% for topic in topics %}
+    <tr>
+    <td>{{ topic.subject }}</td>
+    <td>{{ topic.created_date }}</td>
+    <td>{{ topic.deadline }}</td>
+    <td>{{ topic.event_close_date }}</td>
+    <td>{{ topic.bet_score }}</td>
+    </tr>
+{% endfor %}
+</table>
+</div>
 {% endblock content %}

@@ -63,8 +63,26 @@ def new_topic(request):
     return render(request, 'core/new_topic.html', context)
 
 def archived_topics(request):
+    topics = Topic.objects.filter(status='completed')
+    
+    order = request.REQUEST.get('o', 'desc')
+    column = request.REQUEST.get('c', 'cd')
+    if column == 'bt':  # bet scores
+        topics = sorted(list(topics), key=lambda t: t.bet_score(),
+                    reverse={'asc': False, 'desc': True}.get(order, True))
+    else:
+        order_by = {'asc': '', 'desc': '-'}.get(order, '-')+\
+                                        {  'cd': 'created_date',
+                                            'dd': 'deadline',
+                                            'ed': 'event_close_date'
+                                        }.get(column, 'created_date')
+        topics = topics.order_by(order_by)
+    
     context = {
-        'topics': Topic.objects.filter(status='completed'),
+        'topics': topics,
+        'o': {'asc': 'desc', 'desc': 'asc'}.get(order, 'desc'),
+        'c': column,
+        'arrow': {'asc': '&uarr;', 'desc': '&darr;'}.get(order, '&darr;'),
     }
     return render(request, 'core/archived_topics.html', context)
 
