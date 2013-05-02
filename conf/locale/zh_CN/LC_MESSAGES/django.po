@@ -57,7 +57,7 @@ msgstr "截至时间"
 
 #: .\core\forms.py:53 .\core\models.py:99
 msgid "end weight"
-msgstr "最终的权重"
+msgstr "结束权重值"
 
 #: .\core\forms.py:54 .\core\forms.py:118 .\core\models.py:126
 msgid "Yes/No"
