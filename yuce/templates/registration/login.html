@@ -8,5 +8,7 @@
         <h3>{% trans 'Log in' %}</h3>
         {{ form|bootstrap}}
         <input type="submit" value="{% trans 'Log in' %}" class="btn" />
+        &nbsp;
+        <a href="{% url 'auth_password_reset' %}">{% trans 'Forgot password' %}?</a>
     </form>
 {% endblock content %}

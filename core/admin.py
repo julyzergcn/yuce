@@ -43,20 +43,23 @@ class TopicAdmin(admin.ModelAdmin):
     list_filter = ('status', )
     
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if db_field.name == 'yesno':
-            return MyBooleanField(required=False, label=_('Yes/No'))
         formfield = super(TopicAdmin, self).formfield_for_dbfield(db_field, **kwargs)
         request = kwargs.pop("request", None)
-        if db_field.name == 'status' and request:
-            id = request.path.rsplit('/', 2)[1]
-            if id.isdigit():
-                current_status = Topic.objects.get(id=id).status
+        if request and request.path.rsplit('/', 2)[1].isdigit():
+            topic_id = request.path.rsplit('/', 2)[1]
+            current_status = Topic.objects.get(id=topic_id).status
+            if db_field.name == 'status':
                 if current_status == 'pending':
                     formfield.choices = (('pending', _('pending')), ('open', _('open')), ('rejected', _('rejected')),)
                 elif current_status == 'open':
                     formfield.choices = (('open', _('open')), ('cancelled', _('cancelled')),)
                 else:
                     formfield.choices = ((current_status, _(current_status)),)
+            elif db_field.name == 'yesno':
+                formfield = MyBooleanField(required=False, label=_('Yes/No'))
+                if current_status != 'event closed':
+                    formfield.widget.attrs['disabled'] = 'disabled'
+                    
         return formfield
     
     def change_view(self, request, object_id, form_url='', extra_context=None):
