@@ -41,8 +41,11 @@
     {{ form.event_close_date|bootstrap }}
     {{ form.deadline|bootstrap }}
     {{ form.end_weight|bootstrap }}
+    <a href="#bet-div" class="btn" data-toggle="collapse">{% trans 'Bet' %}</a> <br><br>
+    <div id="bet-div" class="collapse">
     {{ form.yesno|bootstrap }}
     {{ form.score|bootstrap }}
+    </div>
     <input type="submit" value="{% trans 'Submit' %}" class="btn" />
 </form>
 {% endblock content %}

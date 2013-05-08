@@ -45,7 +45,7 @@
 </tr>
 {% for topic in topics %}
     <tr>
-    <td>{{ topic.subject }}</td>
+	    <td><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></td>
     <td>{{ topic.created_date }}</td>
     <td>{{ topic.deadline }}</td>
     <td>{{ topic.event_close_date }}</td>

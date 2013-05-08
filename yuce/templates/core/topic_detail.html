@@ -9,8 +9,8 @@
     
     <strong>{% trans 'Score' %}</strong>:
     <ul>
-        <li>{% trans 'Yes' %}: {{ topic.yes_score }}</li>
-        <li>{% trans 'No' %}: {{ topic.no_score }}</li>
+	    <li>{% trans 'Yes' %}: {{ topic.yes_score }} ({{ topic.yes_score_plus_weight }})</li>
+	    <li>{% trans 'No' %}: {{ topic.no_score }} ({{ topic.no_score_plus_weight }})</li>
     </ul>
     
     <strong>{% trans 'Tags' %}</strong>:
