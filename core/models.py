@@ -7,7 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.conf import settings
 
-from core.util import get_current_weight, mark_deadline, mark_event_closed
+from core.util import (get_current_weight, mark_deadline, mark_event_closed,
+                       site_profit_from_topic, submitter_profit_from_topic)
 
 
 class User(AbstractUser):
@@ -168,6 +169,24 @@ class Topic(models.Model):
     def can_bet_without_reason(self):
         can, reason = self.can_bet()
         return can
+
+    def site_profit(self):
+        if self.status == 'completed':
+            return site_profit_from_topic(self)
+        return 0
+
+    def submitter_profit(self):
+        if self.status == 'completed':
+            return submitter_profit_from_topic(self)
+        return 0
+
+    def yes_bets_score(self):
+        return sum(self.bet_set.filter(yesno=True).values_list('score',
+                                                               flat=True))
+
+    def no_bets_score(self):
+        return sum(self.bet_set.filter(yesno=False).values_list('score',
+                                                                flat=True))
 
 
 class Bet(models.Model):

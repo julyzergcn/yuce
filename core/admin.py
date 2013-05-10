@@ -42,8 +42,21 @@ admin.site.register(Tag)
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ('subject', 'status', 'created_date', 'deadline',
-                    'event_close_date', 'complete_date', 'yesno')
+                    'event_close_date', 'complete_date', 'yesno', 'profit',
+                    'submitter_profit', 'yes_bets', 'no_bets')
     list_filter = ('status', )
+
+    def profit(self, obj):
+        return '%.1f' % obj.site_profit()
+
+    def submitter_profit(self, obj):
+        return '%.1f' % obj.submitter_profit()
+
+    def yes_bets(self, obj):
+        return obj.yes_bets_score()
+
+    def no_bets(self, obj):
+        return obj.no_bets_score()
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         formfield = super(TopicAdmin, self).formfield_for_dbfield(db_field,
