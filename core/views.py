@@ -6,28 +6,32 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.contrib.auth.forms import PasswordChangeForm
 
-from core.models import *
-from core.forms import *
-from core.util import *
+from core.models import Topic, Bet, User
+from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
+from core.utils import can_post_topic
 
 
 def index(request):
     open_topics = Topic.objects.filter(status='open')
-    hot_topics = sorted(list(open_topics), key=lambda t: t.bet_score(), reverse=True)
+    hot_topics = sorted(list(open_topics), key=lambda t: t.bet_score(),
+                        reverse=True)
     context = {
         'deadline_topics': open_topics.order_by('deadline'),
         'hot_topics': hot_topics,
         'new_topics': open_topics.order_by('-created_date'),
-        'new_bets': Bet.objects.filter(topic__status='open').order_by('-created_date'),
+        'new_bets': Bet.objects.filter(topic__status='open'
+                                       ).order_by('-created_date'),
         'profit_bets': Bet.objects.all().order_by('-profit').exclude(profit=0),
     }
     return render(request, 'index.html', context)
+
 
 def topic_list(request):
     context = {
         'topics': Topic.objects.filter(status='open'),
     }
     return render(request, 'core/topic_list.html', context)
+
 
 def topic_detail(request, id):
     topic = get_object_or_404(Topic, id=id)
@@ -43,6 +47,7 @@ def topic_detail(request, id):
         'form': form,
     }
     return render(request, 'core/topic_detail.html', context)
+
 
 @login_required
 def new_topic(request):
@@ -62,22 +67,24 @@ def new_topic(request):
     }
     return render(request, 'core/new_topic.html', context)
 
+
 def archived_topics(request):
     topics = Topic.objects.filter(status='completed')
-    
+
     order = request.REQUEST.get('o', 'desc')
     column = request.REQUEST.get('c', 'cd')
     if column == 'bt':  # bet scores
-        topics = sorted(list(topics), key=lambda t: t.bet_score(),
-                    reverse={'asc': False, 'desc': True}.get(order, True))
+        topics = sorted(list(topics),
+                        key=lambda t: t.bet_score(),
+                        reverse={'asc': False, 'desc': True}.get(order, True))
     else:
-        order_by = {'asc': '', 'desc': '-'}.get(order, '-')+\
-                                        {  'cd': 'created_date',
-                                            'dd': 'deadline',
-                                            'ed': 'event_close_date'
-                                        }.get(column, 'created_date')
+        order_by = {'asc': '', 'desc': '-'}.get(order, '-') + {
+            'cd': 'created_date',
+            'dd': 'deadline',
+            'ed': 'event_close_date'
+        }.get(column, 'created_date')
         topics = topics.order_by(order_by)
-    
+
     context = {
         'topics': topics,
         'o': {'asc': 'desc', 'desc': 'asc'}.get(order, 'desc'),
@@ -85,6 +92,7 @@ def archived_topics(request):
         'arrow': {'asc': '&uarr;', 'desc': '&darr;'}.get(order, '&darr;'),
     }
     return render(request, 'core/archived_topics.html', context)
+
 
 def search(request):
     if request.method == 'POST':
@@ -94,20 +102,20 @@ def search(request):
     else:
         form = SearchForm()
         topics = Topic.objects.filter(status='open')
-    
+
     order = request.REQUEST.get('o', 'desc')
     column = request.REQUEST.get('c', 'cd')
     if column == 'bt':  # bet scores
-        topics = sorted(list(topics), key=lambda t: t.bet_score(),
-                    reverse={'asc': False, 'desc': True}.get(order, True))
+        topics = sorted(list(topics), key=lambda t: t.bet_score(), reverse={
+            'asc': False, 'desc': True}.get(order, True))
     else:
-        order_by = {'asc': '', 'desc': '-'}.get(order, '-')+\
-                                        {  'cd': 'created_date',
-                                            'dd': 'deadline',
-                                            'ed': 'event_close_date'
-                                        }.get(column, 'created_date')
+        order_by = {'asc': '', 'desc': '-'}.get(order, '-') + {
+            'cd': 'created_date',
+            'dd': 'deadline',
+            'ed': 'event_close_date'
+        }.get(column, 'created_date')
         topics = topics.order_by(order_by)
-    
+
     context = {
         'form': form,
         'topics': topics,
@@ -116,6 +124,7 @@ def search(request):
         'arrow': {'asc': '&uarr;', 'desc': '&darr;'}.get(order, '&darr;'),
     }
     return render(request, 'core/search.html', context)
+
 
 def dumpdata(request):
     response = http.HttpResponse()
@@ -127,6 +136,7 @@ def dumpdata(request):
     json = serialize('json', lst, indent=4)
     response.write(json)
     return response
+
 
 @login_required
 def profile(request):
@@ -155,4 +165,3 @@ def profile(request):
         'my_bets': Bet.objects.filter(user=request.user),
     }
     return render(request, 'core/profile.html', context)
-
