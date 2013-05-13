@@ -8,7 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 from core.models import Topic, Bet, User
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
-from core.utils import can_post_topic
+from core.util import can_post_topic
 
 
 def index(request):

@@ -5,6 +5,7 @@ from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django import http
 from django.utils import timezone
+from django import forms
 
 from core.models import User, Activity, Tag, Topic, Bet
 from core.forms import UserCreationForm, UserChangeForm, MyBooleanField
@@ -45,6 +46,11 @@ class TopicAdmin(admin.ModelAdmin):
                     'event_close_date', 'complete_date', 'yesno', 'profit',
                     'submitter_profit', 'yes_bets', 'no_bets')
     list_filter = ('status', )
+    fields = ('status', 'subject', 'subject_english', 'content',
+              'content_english', 'tags', 'created_date', 'deadline',
+              'event_close_date', 'end_weight', 'text', 'yesno')
+    readonly_fields = ('created_date', )
+    save_on_top = True
 
     def profit(self, obj):
         return '%.1f' % obj.site_profit()
@@ -62,23 +68,23 @@ class TopicAdmin(admin.ModelAdmin):
         formfield = super(TopicAdmin, self).formfield_for_dbfield(db_field,
                                                                   **kwargs)
         request = kwargs.pop("request", None)
-        if request and request.path.rsplit('/', 2)[1].isdigit():
-            topic_id = request.path.rsplit('/', 2)[1]
-            current_status = Topic.objects.get(id=topic_id).status
-            if db_field.name == 'status':
-                if current_status == 'pending':
-                    formfield.choices = (('pending', _('pending')),
-                                         ('open', _('open')),
-                                         ('rejected', _('rejected')),)
-                elif current_status == 'open':
-                    formfield.choices = (('open', _('open')),
-                                         ('cancelled', _('cancelled')),)
-                else:
-                    formfield.choices = ((current_status, _(current_status)),)
-            elif db_field.name == 'yesno':
-                formfield = MyBooleanField(required=False, label=_('Yes/No'))
-                if current_status != 'event closed':
-                    formfield.widget.attrs['disabled'] = 'disabled'
+        topic_id = request.path.rsplit('/', 2)[1]
+        current_status = Topic.objects.get(id=topic_id).status
+        if db_field.name == 'status':
+            formfield.widget = forms.RadioSelect()
+            if current_status == 'pending':
+                formfield.choices = (('pending', _('pending')),
+                                     ('open', _('open')),
+                                     ('rejected', _('rejected')),)
+            elif current_status == 'open':
+                formfield.choices = (('open', _('open')),
+                                     ('cancelled', _('cancelled')),)
+            else:
+                formfield.choices = ((current_status, _(current_status)),)
+        elif db_field.name == 'yesno':
+            formfield = MyBooleanField(required=False, label=_('Yes/No'))
+            if current_status != 'event closed':
+                formfield.widget.attrs['disabled'] = 'disabled'
 
         return formfield
 

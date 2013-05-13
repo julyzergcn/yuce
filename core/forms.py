@@ -42,7 +42,11 @@ class MyRadioSelect(forms.RadioSelect):
 
 
 class MyBooleanField(forms.BooleanField):
-    widget = MyRadioSelect(choices=YESNO_CHOICES)
+    # widget = MyRadioSelect(choices=YESNO_CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super(MyBooleanField, self).__init__(*args, **kwargs)
+        self.widget = MyRadioSelect(choices=YESNO_CHOICES)
 
     def to_python(self, value):
         if value == '1':
