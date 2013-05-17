@@ -12,32 +12,12 @@ seconds_delta = lambda time_delta: time_delta.days * 86400 + time_delta.seconds
 minutes_delta = lambda time_delta: seconds_delta(time_delta) / 60
 
 
-def site_increase_score(score):
-    # the super user(site super admin) earn the score
-    super_user = models.get_model('core', 'User').super_user()
-    super_user.score += score
-    super_user.save(update_fields=['score'])
-    return super_user.score
+def get_super_user():
+    return models.get_model('core', 'User').super_user()
 
 
-def site_decrease_score(score):
-    # the super user(site super admin) give back the score to user
-    super_user = models.get_model('core', 'User').super_user()
-    super_user.score -= score
-    super_user.save(update_fields=['score'])
-    return super_user.score
-
-
-def get_site_score():
-    super_user = models.get_model('core', 'User').super_user()
-    return super_user.score
-
-
-def set_site_score(score):
-    super_user = models.get_model('core', 'User').super_user()
-    super_user.score = score
-    super_user.save(update_fields=['score'])
-    return super_user.score
+def get_score_user():
+    return models.get_model('core', 'User').score_user()
 
 
 def get_current_weight(topic):
@@ -71,7 +51,10 @@ def pay_topic_post(user):
             user.score -= cost
             user.save(update_fields=['score'])
 
-            site_increase_score(cost)
+            # site(super user) increase the cost
+            super_user = get_super_user()
+            super_user.score += cost
+            super_user.save(update_fields=['score'])
         return cost
     return 0
 
@@ -94,9 +77,9 @@ def pay_bet(user, bet_score):
             user.score -= bet_score
             user.save(update_fields=['score'])
 
-            super_user = models.get_model('core', 'User').super_user()
-            super_user.score += bet_score
-            super_user.save(update_fields=['score'])
+            score_user = get_score_user()
+            score_user.score += bet_score
+            score_user.save(update_fields=['score'])
         return bet_score
     return 0
 
@@ -131,36 +114,51 @@ def mark_event_closed(topic):
 
 
 def divide_profit(topic):
-    bets = models.get_model('core', 'Bet').objects.filter(topic=topic)
+    all_bets = models.get_model('core', 'Bet').objects.filter(topic=topic)
     yesno = topic.yesno
-    win_bets = bets.filter(yesno=yesno)
-    lose_bets = bets.filter(yesno=(not yesno))
+    win_bets = all_bets.filter(yesno=yesno)
+    lose_bets = all_bets.filter(yesno=(not yesno))
     lose_bets_score = sum(lose_bets.values_list('score', flat=True))
 
-    site_win_rate = Decimal(getattr(settings, 'SITE_WIN_RATE', 0.1))
-    #~ site_score = site_increase_score(lose_bets_score * site_win_rate)
-    #~ site_score -= lose_bets_score * site_win_rate
-    site_score = get_site_score()
-
+    # submitter profit
     submitter_win_rate = Decimal(getattr(settings, 'SUBMITTER_WIN_RATE', 0.1))
-    topic_submitted_cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
     submitter = topic.user
-    submitter.score += lose_bets_score * submitter_win_rate + (
-        topic_submitted_cost)
-    submitter.save(update_fields=['score'])
-    site_score -= lose_bets_score * submitter_win_rate + topic_submitted_cost
+    submitter_profit = lose_bets_score * submitter_win_rate
+    submitter.score += submitter_profit
 
-    all_profit = lose_bets_score * (1 - site_win_rate - submitter_win_rate)
-    all_bet_weight = sum([b.score * b.weight for b in bets])
+    # todo: yes or no? pay back
+    topic_submitted_cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
+    submitter.score += topic_submitted_cost
+    submitter.save(update_fields=['score'])
+
+    # site(super user)
+    super_user = get_super_user()
+    super_user.score -= topic_submitted_cost
+
+    site_win_rate = Decimal(getattr(settings, 'SITE_WIN_RATE', 0.1))
+    site_profit = lose_bets_score * site_win_rate
+    super_user.score += site_profit
+    super_user.save(update_fields=['score'])
+
+    # score_user pay back to submitter and site
+    score_user = get_score_user()
+    score_user.score -= submitter_profit
+    score_user.score -= site_profit
+
+    # all winners profit
+    all_profit = lose_bets_score - submitter_profit - site_profit
+    all_bet_weight = sum([b.score * b.weight for b in all_bets])
     for bet in win_bets:
         bet.profit = all_profit * bet.score * bet.weight / all_bet_weight
         bet.save(update_fields=['profit'])
         winner = bet.user
-        winner.score += bet.profit + bet.score
+        winner.score += bet.profit
+        winner.score += bet.score
         winner.save(update_fields=['score'])
-        site_score -= bet.profit + bet.score
+        score_user.score -= bet.profit
+        score_user.score -= bet.score
 
-    set_site_score(site_score)
+    score_user.save(udpate_fields=['score'])
 
 
 def site_profit_from_topic(topic):
@@ -177,13 +175,3 @@ def submitter_profit_from_topic(topic):
     lose_bets_score = sum(lose_bets.values_list('score', flat=True))
     submitter_win_rate = Decimal(getattr(settings, 'SUBMITTER_WIN_RATE', 0.1))
     return lose_bets_score * submitter_win_rate
-
-
-def give_back_score(topic):
-    cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
-    with transaction.commit_on_success():
-        submitter = topic.user
-        submitter.score += cost
-        submitter.save(update_fields=['score'])
-        site_decrease_score(cost)
-    return cost

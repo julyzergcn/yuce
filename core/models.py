@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 
 from core.util import (get_current_weight, mark_deadline, mark_event_closed,
                        site_profit_from_topic, submitter_profit_from_topic)
@@ -22,7 +23,14 @@ class User(AbstractUser):
         try:
             return cls.objects.filter(is_superuser=True).order_by('id')[0]
         except IndexError:
-            return None
+            raise ImproperlyConfigured(_('Need at least one super user.'))
+
+    @classmethod
+    def score_user(cls):
+        try:
+            return cls.objects.get(id=2)
+        except ObjectDoesNotExist:
+            raise ImproperlyConfigured(_('Need at least one score user(id=2).'))
 
 ACTIONS = (
     ('login', _('login')),

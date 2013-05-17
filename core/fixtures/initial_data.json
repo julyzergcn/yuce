@@ -1,35 +1,55 @@
 [
 {
-    "pk": 1, 
-    "model": "core.tag", 
+    "pk": 2,
+    "model": "core.user",
+    "fields": {
+        "username": "score",
+        "first_name": "score",
+        "last_name": "score",
+        "score": "947.62637344",
+        "is_active": false,
+        "last_login_ip": "127.0.0.1",
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2013-04-25T08:48:51Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$10000$n9VdE38sV39Q$eCuXoTTuAXxcxHBRa3oICl+tkSU7lNGiLRjM9FV2lkE=",
+        "email": "score@score.com",
+        "date_joined": "2013-04-23T02:43:39Z"
+    }
+},
+{
+    "pk": 1,
+    "model": "core.tag",
     "fields": {
         "tag": "\u5a31\u4e50"
     }
 },
 {
-    "pk": 2, 
-    "model": "core.tag", 
+    "pk": 2,
+    "model": "core.tag",
     "fields": {
         "tag": "\u79d1\u6280"
     }
 },
 {
-    "pk": 3, 
-    "model": "core.tag", 
+    "pk": 3,
+    "model": "core.tag",
     "fields": {
         "tag": "\u7ecf\u6d4e"
     }
 },
 {
-    "pk": 4, 
-    "model": "core.tag", 
+    "pk": 4,
+    "model": "core.tag",
     "fields": {
         "tag": "\u793e\u4f1a"
     }
 },
 {
-    "pk": 5, 
-    "model": "core.tag", 
+    "pk": 5,
+    "model": "core.tag",
     "fields": {
         "tag": "\u519b\u4e8b"
     }
