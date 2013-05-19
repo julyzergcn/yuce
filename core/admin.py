@@ -9,7 +9,7 @@ from django import forms
 
 from core.models import User, Activity, Tag, Topic, Bet
 from core.forms import UserCreationForm, UserChangeForm, MyBooleanField
-from core.util import divide_profit, give_back_score
+from core.util import divide_profit, reject_topic
 
 
 class UserAdmin(AuthUserAdmin):
@@ -143,11 +143,9 @@ class TopicAdmin(admin.ModelAdmin):
                 elif original_status == 'pending' and new_status == 'rejected':
                     action = 'reject topic'
                     # give back score to the topic submitter
-                    give_back_score(obj)
+                    reject_topic(obj)
                 elif new_status == 'cancelled':
                     action = 'cancel topic'
-                    # Not give back score to the joined users
-                    #~ give_back_score(obj)
             elif hasattr(self, 'should_be_completed') and \
                     self.should_be_completed:
                 obj.status = 'completed'

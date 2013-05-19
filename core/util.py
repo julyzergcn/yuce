@@ -175,3 +175,16 @@ def submitter_profit_from_topic(topic):
     lose_bets_score = sum(lose_bets.values_list('score', flat=True))
     submitter_win_rate = Decimal(getattr(settings, 'SUBMITTER_WIN_RATE', 0.1))
     return lose_bets_score * submitter_win_rate
+
+
+def reject_topic(topic):
+    '''from pending to rejected status'''
+    submitter = topic.user
+    cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
+    super_user = get_super_user()
+    with transaction.commit_on_success():
+        submitter.score += cost
+        submitter.save(update_fields=['score'])
+        super_user.score -= cost
+        super_user.save(update_fields=['score'])
+    return cost
