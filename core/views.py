@@ -8,7 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 from core.models import Topic, Bet, User
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
-from core.util import can_post_topic
+from core.util import can_post_topic, can_view_topic
 
 
 def index(request):
@@ -35,6 +35,8 @@ def topic_list(request):
 
 def topic_detail(request, id):
     topic = get_object_or_404(Topic, id=id)
+    if not can_view_topic(topic, request.user):
+        raise http.Http404
     if request.method == 'POST':
         form = BetForm(data=request.POST, request=request, topic=topic)
         if form.is_valid():
@@ -98,7 +100,7 @@ def search(request):
     if request.method == 'POST':
         form = SearchForm(data=request.POST)
         if form.is_valid():
-            topics = form.search()
+            topics = form.search(request.user)
     else:
         form = SearchForm()
         topics = Topic.objects.filter(status='open')

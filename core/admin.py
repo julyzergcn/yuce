@@ -43,8 +43,8 @@ admin.site.register(Tag)
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ('subject', 'status', 'created_date', 'deadline',
-                    'event_close_date', 'complete_date', 'yesno', 'profit',
-                    'submitter_profit', 'yes_bets', 'no_bets')
+                    'event_close_date', 'yesno', 'profit',
+                    'submitter_profit', 'yes_bets', 'no_bets', 'user')
     list_filter = ('status', )
     fields = ('status', 'subject', 'subject_english', 'content',
               'content_english', 'tags', 'created_date', 'deadline',
@@ -64,23 +64,37 @@ class TopicAdmin(admin.ModelAdmin):
     def no_bets(self, obj):
         return obj.no_bets_score()
 
+    def get_status_choices(self, original_status=None):
+        if original_status is None:
+            return (('pending', _('pending')), )
+        if original_status == 'pending':
+            return (('pending', _('pending')),
+                    ('open', _('open')),
+                    ('rejected', _('rejected')), )
+        elif original_status == 'open':
+            return (('open', _('open')),
+                    ('cancelled', _('cancelled')), )
+        else:
+            return ((original_status, _(original_status)), )
+
+    def get_current_status(self, request):
+        try:
+            topic_id = request.path.rsplit('/', 2)[1]
+            current_status = Topic.objects.get(id=topic_id).status
+        except:
+            current_status = None
+        return current_status
+
     def formfield_for_dbfield(self, db_field, **kwargs):
-        formfield = super(TopicAdmin, self).formfield_for_dbfield(db_field,
-                                                                  **kwargs)
+        formfield = super(TopicAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
         request = kwargs.pop("request", None)
-        topic_id = request.path.rsplit('/', 2)[1]
-        current_status = Topic.objects.get(id=topic_id).status
+        current_status = self.get_current_status(request)
+
         if db_field.name == 'status':
             formfield.widget = forms.RadioSelect()
-            if current_status == 'pending':
-                formfield.choices = (('pending', _('pending')),
-                                     ('open', _('open')),
-                                     ('rejected', _('rejected')),)
-            elif current_status == 'open':
-                formfield.choices = (('open', _('open')),
-                                     ('cancelled', _('cancelled')),)
-            else:
-                formfield.choices = ((current_status, _(current_status)),)
+            formfield.choices = self.get_status_choices(current_status)
         elif db_field.name == 'yesno':
             formfield = MyBooleanField(required=False, label=_('Yes/No'))
             if current_status != 'event closed':
@@ -161,6 +175,8 @@ class TopicAdmin(admin.ModelAdmin):
                 object_id=obj.id,
             ).save()
 
+        if not hasattr(obj, 'user') or obj.user is None:
+            obj.user = request.user
         obj.save()
 
 admin.site.register(Topic, TopicAdmin)

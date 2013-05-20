@@ -104,7 +104,7 @@ class Tag(models.Model):
 
 
 class Topic(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, verbose_name=_('Submitter'))
     subject = models.CharField(_('subject'), max_length=200)
     subject_english = models.CharField(_('subject in english'),
                                        max_length=200, blank=True)

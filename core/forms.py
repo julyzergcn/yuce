@@ -9,7 +9,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.query import Q
 
 from core.models import User, Topic, Bet, Activity, Tag
-from core.util import get_current_weight, can_bet, pay_bet, pay_topic_post
+from core.util import (get_current_weight, can_bet, pay_bet, pay_topic_post,
+                        topic_search_filter)
 
 
 class UserChangeForm(AuthUserChangeForm):
@@ -207,7 +208,7 @@ class SearchForm(forms.Form):
                                          ('event closed', _('event closed')),
                                          ('completed', _('completed'))]
 
-    def search(self):
+    def search(self, user):
         data = self.cleaned_data
 
         keywords = data.get('keywords', '')
@@ -227,6 +228,7 @@ class SearchForm(forms.Form):
             query &= Q(status=status)
 
         self.search_results = Topic.objects.filter(query)
+        self.search_results = topic_search_filter(self.search_results, user)
         return self.search_results
 
 

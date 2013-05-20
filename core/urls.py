@@ -10,6 +10,6 @@ urlpatterns = patterns('core.views',
     url(r'^topic/archived/$', 'archived_topics', name='archived_topics'),
     url(r'^search/$', 'search', name='search'),
     url(r'^dumpdata/$', 'dumpdata'),
-    
+
     url(r'^accounts/profile/$', 'profile', name='my_profile'),
 )

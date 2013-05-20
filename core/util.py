@@ -5,6 +5,7 @@ from django.db import transaction, models
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
+from django.db.models import Q
 from celery import task
 
 
@@ -41,6 +42,27 @@ def can_post_topic(user):
     if user.score < getattr(settings, 'TOPIC_SUBMITTED_COST', 10):
         return False, _('No enough score to post topic')
     return True, ''
+
+
+VIEWABLE_STATUSES = ('open', 'deadline', 'event closed',
+                     'completed', 'cancelled')
+
+
+def can_view_topic(topic, user):
+    if topic.user == user or user.is_staff:
+        return True
+    else:
+        if topic.status in VIEWABLE_STATUSES:
+            return True
+    return False
+
+
+def topic_search_filter(queryset, user):
+    if user.is_staff:
+        return queryset
+    query = Q(user__pk=user.pk)
+    query |= Q(status__in=VIEWABLE_STATUSES)
+    return queryset.filter(query)
 
 
 def pay_topic_post(user):
@@ -158,7 +180,7 @@ def divide_profit(topic):
         score_user.score -= bet.profit
         score_user.score -= bet.score
 
-    score_user.save(udpate_fields=['score'])
+    score_user.save(update_fields=['score'])
 
 
 def site_profit_from_topic(topic):
