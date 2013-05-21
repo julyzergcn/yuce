@@ -26,13 +26,6 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def topic_list(request):
-    context = {
-        'topics': Topic.objects.filter(status='open'),
-    }
-    return render(request, 'core/topic_list.html', context)
-
-
 def topic_detail(request, id):
     topic = get_object_or_404(Topic, id=id)
     if not can_view_topic(topic, request.user):
@@ -167,3 +160,23 @@ def profile(request):
         'my_bets': Bet.objects.filter(user=request.user),
     }
     return render(request, 'core/profile.html', context)
+
+
+@login_required
+def profile_info(request):
+    pass
+
+
+@login_required
+def profile_topics(request):
+    pass
+
+
+@login_required
+def profile_bets(request):
+    pass
+
+
+@login_required
+def profile_score(request):
+    pass
