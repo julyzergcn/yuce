@@ -1,0 +1,17 @@
+{% extends 'profile/base.html' %}
+{% load i18n bootstrap %}
+
+{% block profile_content %}
+
+   <div id="my_bets" class="mt30">
+        <legend>{% trans 'My Bets' %}</legend>
+        <ul>
+            {% for bet in my_bets %}
+                <li style="list-style-type:none"><img src="{% if bet.yesno %}{{ STATIC_URL }}admin/img/icon-yes.gif{% else %}{{ STATIC_URL }}admin/img/icon-no.gif{% endif %}">
+                {{ bet.score }} on <a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a> {{ bet.created_date }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
+

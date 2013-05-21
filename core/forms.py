@@ -233,8 +233,28 @@ class SearchForm(forms.Form):
 
 
 class EmailChangeForm(forms.Form):
+    old_email = forms.EmailField(label=_('Old Email'))
     email = forms.EmailField(label=_('New Email'))
+    password = forms.CharField(label=('Password'),
+                                            widget=forms.PasswordInput)
 
-    def save(self, user):
-        user.email = self.cleaned_data['email']
-        user.save(update_fields=['email'])
+    def __init__(self, user, **kwargs):
+        super(EmailChangeForm, self).__init__(**kwargs)
+        self.user = user
+        self.fields['old_email'].initial = user.email
+
+    def clean_old_email(self):
+        if self.cleaned_data['old_email']  != self.user.email:
+            raise forms.ValidationError(_('Invalid old email'))
+        return self.cleaned_data['old_email']
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if not self.user.check_password(password):
+            raise forms.ValidationError(_('Invalid password'))
+        return password
+
+    def save(self):
+        self.user.email = self.cleaned_data['email']
+        self.user.save(update_fields=['email'])
+        return self.user

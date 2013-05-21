@@ -1,0 +1,42 @@
+{% extends 'profile/base.html' %}
+{% load i18n bootstrap %}
+
+{% block profile_content %}
+
+    <div class="mt30">
+        {% trans 'Username' %}: {{ user.username }}
+    </div>
+
+    <div id="change_email" class="mt30">
+        <form method="post" action="" class="form-horizontal">
+            {% csrf_token %}
+            <legend>{% trans 'Change Email' %}</legend>
+            {{ email_form|bootstrap }}
+            <input type="hidden" name="change_email" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{% trans 'Change' %}" class="btn" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="change_password" class="mt30">
+        <form method="post" action="" class="form-horizontal">
+            {% csrf_token %}
+            <legend>{% trans 'Change Password' %}</legend>
+            {{ password_form|bootstrap }}
+            <input type="hidden" name="change_password" />
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{% trans 'Change' %}" class="btn" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt30">
+        {% trans 'My Score' %}: {{ user.score }} (<a href="{% url 'profile_score' %}">{% trans 'Detail' %}</a>)
+    </div>
+{% endblock %}
+

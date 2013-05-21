@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block extra_head %}
+<style type="text/css">
+.profile-menu {border-radius:5px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);padding:0;}
+.profile-menu li a {border: 1px solid #E5E5E5;margin: 0 0 -1px;}
+.affix {top:60px; width:160px}
+.affix-top {margin-top:30px}
+.mt30 {margin-top: 30px}
+#my_topics li a {padding-left: 30px}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid">
+<div class="span3">
+    <div data-spy="affix" data-offset-top="30">
+        <h3>{% trans 'My profile' %}</h3>
+        <ul class="nav nav-list profile-menu">
+            <li><a href="{% url 'profile_info' %}#change_email">{% trans 'Change Email' %}</a></li>
+            <li><a href="{% url 'profile_info' %}#change_password">{% trans 'Change Password' %}</a></li>
+            <li><a href="#my_topics" data-toggle="collapse">{% trans 'My Topics' %} &rarr;</a></li>
+                <div id="my_topics" class="nav nav-list profile-menu collapse">
+                    <li><a href="{% url 'profile_topics' %}?status=pending">{% trans 'Pending' %}</a></a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=rejected">{% trans 'Rejected' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=open">{% trans 'Open' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=deadline">{% trans 'Deadline' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=completed">{% trans 'Completed' %}</a></li>
+                </div>
+            <li><a href="{% url 'profile_bets' %}">{% trans 'My Bets' %}</a></li>
+            <li><a href="{% url 'profile_score' %}">{% trans 'My Score' %}</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="span9">
+    {% block profile_content %}{% endblock %}
+</div>
+
+</div>
+
+{% endblock content %}
+

@@ -1,0 +1,16 @@
+{% extends 'profile/base.html' %}
+{% load i18n bootstrap %}
+
+{% block profile_content %}
+
+    <div id="my_topics" class="mt30">
+        <legend>{% trans 'My Topics' %}</legend>
+        <ul>
+            {% for topic in my_topics %}
+                <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
+

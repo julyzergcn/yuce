@@ -133,43 +133,42 @@ def dumpdata(request):
     return response
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        if request.POST.get('change_type') == 'email':
-            email_form = EmailChangeForm(request.POST)
-            password_form = PasswordChangeForm(request.user)
-            if email_form.is_valid():
-                email_form.save(request.user)
-                messages.success(request, _('Email is changed'))
-                return redirect('my_profile')
-        elif request.POST.get('change_type') == 'password':
-            email_form = EmailChangeForm(initial={'email': request.user.email})
-            password_form = PasswordChangeForm(request.user, data=request.POST)
-            if password_form.is_valid():
-                password_form.save()
-                messages.success(request, _('password is changed'))
-                return redirect('my_profile')
-    else:
-        email_form = EmailChangeForm(initial={'email': request.user.email})
-        password_form = PasswordChangeForm(request.user)
-    context = {
-        'email_form': email_form,
-        'password_form': password_form,
-        'my_topics': Topic.objects.filter(user=request.user),
-        'my_bets': Bet.objects.filter(user=request.user),
-    }
-    return render(request, 'core/profile.html', context)
 
 
 @login_required
 def profile_info(request):
-    pass
+    user = request.user
+    password_form = PasswordChangeForm(user)
+    email_form = EmailChangeForm(user)
+
+    if request.method == 'POST':
+        if 'change_password' in request.POST:
+            password_form = PasswordChangeForm(user, data=request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                messages.success(request, _('Password is changed'))
+                return redirect('profile_info')
+        elif 'change_email' in request.POST:
+            email_form = EmailChangeForm(user, data=request.POST)
+            if email_form.is_valid():
+                email_form.save()
+                messages.success(request, _('Email is changed'))
+                return redirect('profile_info')
+
+    context = {
+        'user': user,
+        'password_form': password_form,
+        'email_form': email_form,
+    }
+    return render(request, 'profile/profile_info.html', context)
 
 
 @login_required
 def profile_topics(request):
-    pass
+    context = {
+        'submitted_topics': [],
+    }
+    return render(request, 'profile/profile_topics.html', context)
 
 
 @login_required
