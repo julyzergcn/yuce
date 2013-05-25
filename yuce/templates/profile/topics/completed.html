@@ -1,0 +1,41 @@
+{% extends 'profile/topics/base.html' %}
+{% load i18n bootstrap %}
+
+{% block profile_content %}
+
+    <div id="my_topics" class="mt30">
+        <h4>{% trans 'My Topics' %}: {% trans 'Completed' %}</h4>
+        <div>
+        <table class="table">
+        {% if form.search_results %}
+            <tr>
+                <th><a href="?c=id&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">ID</a> {% if form.column == 'id' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=sbj&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Subject' %}</a> {% if form.column == 'sbj' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=bty&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Bet yes' %}</a> {% if form.column == 'bty' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=btn&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Bet no' %}</a> {% if form.column == 'btn' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=yn&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Yes/No' %}</a> {% if form.column == 'yn' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=cpd&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Completed date' %}</a> {% if form.column == 'cpd' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th>{% trans 'Win rate' %}</th>
+                <th><a href="?c=pf&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Profit' %}</a> {% if form.column == 'pf' %}{{ form.arrow|safe }}{% endif %}</th>
+            </tr>
+        {% else %}
+            {% trans 'No results' %}
+        {% endif %}
+        {% for topic in form.search_results %}
+            <tr>
+                <td><a href="{{ topic.get_absolute_url }}">{{ topic.id }}</a></td>
+                <td><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></td>
+                <td>{{ topic.yes_score }}</td>
+                <td>{{ topic.no_score }}</td>
+                <td><img src="{% if topic.yesno %}{{ STATIC_URL }}admin/img/icon-yes.gif{% else %}{{ STATIC_URL }}admin/img/icon-no.gif{% endif %}"></td>
+                <td>{{ topic.completed_date }}</td>
+                <td>{{ topic.submitter_win_rate }}</td>
+                <td>{{ topic.submitter_profit }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    </div>
+
+{% endblock %}
+

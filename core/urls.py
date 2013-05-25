@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url(r'^accounts/profile/info/$', 'profile_info', name='profile_info'),
     url(r'^accounts/profile/topics/$', 'profile_topics',
         name='profile_topics'),
+
     url(r'^accounts/profile/bets/$', 'profile_bets', name='profile_bets'),
     url(r'^accounts/profile/score/$', 'profile_score', name='profile_score'),
 )

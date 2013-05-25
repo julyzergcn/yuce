@@ -10,7 +10,7 @@ from django.db.models.query import Q
 
 from core.models import User, Topic, Bet, Activity, Tag
 from core.util import (get_current_weight, can_bet, pay_bet, pay_topic_post,
-                        topic_search_filter)
+                       topic_search_filter)
 
 
 class UserChangeForm(AuthUserChangeForm):
@@ -195,10 +195,11 @@ class BetForm(forms.Form):
 class SearchForm(forms.Form):
     keywords = forms.CharField(label=_('Search'), required=False)
     category = forms.ChoiceField(label=_('Category'), required=False)
-    status = forms.ChoiceField(label=_('Status'), required=False,
-                               initial='open')
+    status = forms.ChoiceField(label=_('Status'), required=False)
 
-    def __init__(self, **kwargs):
+    def __init__(self, request, **kwargs):
+        self.request = request
+        kwargs['data'] = request.REQUEST
         super(SearchForm, self).__init__(**kwargs)
         self.fields['category'].choices = [('all', _('All'))] + [
             (t.tag, t.tag) for t in Tag.objects.all()]
@@ -208,9 +209,40 @@ class SearchForm(forms.Form):
                                          ('event closed', _('event closed')),
                                          ('completed', _('completed'))]
 
-    def search(self, user):
-        data = self.cleaned_data
+        # current order, column, order_by
+        self.order = self.request.REQUEST.get('o', 'desc')
+        self.column = self.request.REQUEST.get('c', 'cd')
+        self.order_by = {'asc': '', 'desc': '-'}.get(self.order, '-') + {
+            'cd': 'created_date',
+            'dd': 'deadline',
+            'ed': 'event_close_date',
+            'sbj': 'subject',
+            'id': 'id',
+            'rjt': 'rejected_date',
+            'rjr': 'text',
+            'cld': 'cancelled_date',
+            'yn': 'yesno',
+            'cpd': 'completed_date',
+        }.get(self.column, 'created_date')
 
+        # next order, arrow
+        self.next_order = {'asc': 'desc', 'desc': 'asc'}.get(self.order,
+                                                             'desc')
+        self.arrow = {'asc': '&uarr;', 'desc': '&darr;'}.get(self.order,
+                                                             '&darr;')
+
+        # whether search for my profile of topics
+        self.my = 'my' in self.request.REQUEST
+        if self.my:
+            self.fields['status'].choices += [('pending', _('pending')),
+            ('rejected', _('rejected')),
+            ('cancelled', _('cancelled')),]
+
+    def search(self):
+        data = self.cleaned_data
+        self.data = data
+
+        # filter
         keywords = data.get('keywords', '')
         query = Q()
         for kw in keywords.split():
@@ -228,7 +260,27 @@ class SearchForm(forms.Form):
             query &= Q(status=status)
 
         self.search_results = Topic.objects.filter(query)
-        self.search_results = topic_search_filter(self.search_results, user)
+
+        if self.my:
+            self.search_results = self.search_results.filter(
+                user__pk=self.request.user.pk)
+        else:
+            self.search_results = topic_search_filter(self.search_results,
+                                                      self.request.user)
+
+        # order by
+        # bet, bet_yes, bet_no, submitter_profit
+        if self.column in ('bt', 'bty', 'btn', 'pf'):
+            func_name = {'bt': 'bet_score', 'bty': 'yes_score',
+                    'btn': 'no_score', 'pf': 'submitter_profit'}[self.column]
+            self.search_results = sorted(
+                list(self.search_results),
+                key=lambda t: getattr(t, func_name)(),
+                reverse={'asc': False, 'desc': True}.get(self.order, True)
+            )
+        else:
+            self.search_results = self.search_results.order_by(self.order_by)
+
         return self.search_results
 
 
@@ -236,7 +288,7 @@ class EmailChangeForm(forms.Form):
     old_email = forms.EmailField(label=_('Old Email'))
     email = forms.EmailField(label=_('New Email'))
     password = forms.CharField(label=('Password'),
-                                            widget=forms.PasswordInput)
+                               widget=forms.PasswordInput)
 
     def __init__(self, user, **kwargs):
         super(EmailChangeForm, self).__init__(**kwargs)
@@ -244,7 +296,7 @@ class EmailChangeForm(forms.Form):
         self.fields['old_email'].initial = user.email
 
     def clean_old_email(self):
-        if self.cleaned_data['old_email']  != self.user.email:
+        if self.cleaned_data['old_email'] != self.user.email:
             raise forms.ValidationError(_('Invalid old email'))
         return self.cleaned_data['old_email']
 

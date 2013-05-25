@@ -21,13 +21,14 @@
         <ul class="nav nav-list profile-menu">
             <li><a href="{% url 'profile_info' %}#change_email">{% trans 'Change Email' %}</a></li>
             <li><a href="{% url 'profile_info' %}#change_password">{% trans 'Change Password' %}</a></li>
-            <li><a href="#my_topics" data-toggle="collapse">{% trans 'My Topics' %} &rarr;</a></li>
+            <li><a href="#my_topics" data-toggle="collapse" id="my_topics_btn">{% trans 'My Topics' %} <span>+</span><span style="display:none">-</span></a></li>
                 <div id="my_topics" class="nav nav-list profile-menu collapse">
-                    <li><a href="{% url 'profile_topics' %}?status=pending">{% trans 'Pending' %}</a></a></li>
-                    <li><a href="{% url 'profile_topics' %}?status=rejected">{% trans 'Rejected' %}</a></li>
-                    <li><a href="{% url 'profile_topics' %}?status=open">{% trans 'Open' %}</a></li>
-                    <li><a href="{% url 'profile_topics' %}?status=deadline">{% trans 'Deadline' %}</a></li>
-                    <li><a href="{% url 'profile_topics' %}?status=completed">{% trans 'Completed' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=pending&category=all&my=">{% trans 'Pending' %}</a></a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=rejected&category=all&my=">{% trans 'Rejected' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=cancelled&category=all&my=">{% trans 'Cancelled' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=open&category=all&my=">{% trans 'Open' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=deadline&category=all&my=">{% trans 'Deadline' %}</a></li>
+                    <li><a href="{% url 'profile_topics' %}?status=completed&category=all&my=">{% trans 'Completed' %}</a></li>
                 </div>
             <li><a href="{% url 'profile_bets' %}">{% trans 'My Bets' %}</a></li>
             <li><a href="{% url 'profile_score' %}">{% trans 'My Score' %}</a></li>
@@ -43,3 +44,13 @@
 
 {% endblock content %}
 
+
+{% block extra_js %}
+<script type="text/javascript">
+$(function(){
+    $('#my_topics_btn').click(function(){
+        $('#my_topics_btn span').toggle();
+    });
+});
+</script>
+{% endblock %}

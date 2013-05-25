@@ -1,0 +1,37 @@
+{% extends 'profile/topics/base.html' %}
+{% load i18n bootstrap %}
+
+{% block profile_content %}
+
+    <div id="my_topics" class="mt30">
+        <h4>{% trans 'My Topics' %}: {% trans 'Rejected' %}</h4>
+        <div>
+        <table class="table">
+        {% if form.search_results %}
+            <tr>
+                <th><a href="?c=id&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">ID</a> {% if form.column == 'id' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=sbj&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Subject' %}</a> {% if form.column == 'sbj' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=cd&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Created date' %}</a> {% if form.column == 'cd' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=rjt&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Rejected date' %}</a> {% if form.column == 'rjt' %}{{ form.arrow|safe }}{% endif %}</th>
+                <th><a href="?c=rjr&o={{ form.next_order }}&status={{ form.data.status }}&category={{ form.data.category }}&keywords={{ form.data.keywords }}&my=">{% trans 'Rejected reason' %}</a> {% if form.column == 'rjr' %}{{ form.arrow|safe }}{% endif %}</th>
+
+            </tr>
+        {% else %}
+            {% trans 'No results' %}
+        {% endif %}
+        {% for topic in form.search_results %}
+            <tr>
+                <td><a href="{{ topic.get_absolute_url }}">{{ topic.id }}</a></td>
+                <td><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></td>
+                <td>{{ topic.created_date }}</td>
+                <td>{{ topic.rejected_date }}</td>
+                <td>{{ topic.text }}</td>
+
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    </div>
+
+{% endblock %}
+

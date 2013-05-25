@@ -114,10 +114,16 @@ class Topic(models.Model):
                               choices=STATUSES, default='pending')
     tags = models.ManyToManyField(Tag, null=True, blank=True,
                                   verbose_name=_('tags'))
-    created_date = models.DateTimeField(default=timezone.now)
+
+    created_date = models.DateTimeField(default=timezone.now)    # then pending
+    approved_date = models.DateTimeField(blank=True, null=True)   # then open
+    rejected_date = models.DateTimeField(blank=True, null=True)
+    cancelled_date = models.DateTimeField(blank=True, null=True)
+
     deadline = models.DateTimeField(_('deadline'))
     event_close_date = models.DateTimeField(_('event close date'))
     complete_date = models.DateTimeField(blank=True, null=True)
+
     end_weight = models.PositiveIntegerField(_('end weight'))
     text = models.TextField(_('note'), blank=True)
     yesno = models.NullBooleanField(_('Yes/No'), blank=True, null=True)
@@ -185,7 +191,8 @@ class Topic(models.Model):
 
     def submitter_profit(self):
         if self.status == 'completed':
-            return submitter_profit_from_topic(self)
+            profit = submitter_profit_from_topic(self)
+            return '%.2f' % profit
         return 0
 
     def yes_bets_score(self):
@@ -195,6 +202,9 @@ class Topic(models.Model):
     def no_bets_score(self):
         return sum(self.bet_set.filter(yesno=False).values_list('score',
                                                                 flat=True))
+
+    def submitter_win_rate(self):
+        return getattr(settings, 'SUBMITTER_WIN_RATE', 0.1)
 
 
 class Bet(models.Model):

@@ -9,7 +9,7 @@ from django import forms
 
 from core.models import User, Activity, Tag, Topic, Bet
 from core.forms import UserCreationForm, UserChangeForm, MyBooleanField
-from core.util import divide_profit, reject_topic
+from core.util import divide_profit, reject_topic, cancel_topic
 
 
 class UserAdmin(AuthUserAdmin):
@@ -154,12 +154,17 @@ class TopicAdmin(admin.ModelAdmin):
             if new_status != original_status:
                 if original_status == 'pending' and new_status == 'open':
                     action = 'approve topic'
+                    obj.approved_date = timezone.now()
                 elif original_status == 'pending' and new_status == 'rejected':
                     action = 'reject topic'
-                    # give back score to the topic submitter
+                    obj.rejected_date = timezone.now()
+                    # give back scores(submitted & betted score) to submitter
                     reject_topic(obj)
                 elif new_status == 'cancelled':
                     action = 'cancel topic'
+                    obj.cancelled_date = timezone.now()
+                    # give back score to the betted users
+                    cancel_topic(obj)
             elif hasattr(self, 'should_be_completed') and \
                     self.should_be_completed:
                 obj.status = 'completed'

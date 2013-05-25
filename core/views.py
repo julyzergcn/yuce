@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.contrib.auth.forms import PasswordChangeForm
+from django.views.decorators.csrf import csrf_exempt
 
 from core.models import Topic, Bet, User
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
@@ -90,35 +91,18 @@ def archived_topics(request):
 
 
 def search(request):
-    if request.method == 'POST':
-        form = SearchForm(data=request.POST)
-        if form.is_valid():
-            topics = form.search(request.user)
-    else:
-        form = SearchForm()
-        topics = Topic.objects.filter(status='open')
-
-    order = request.REQUEST.get('o', 'desc')
-    column = request.REQUEST.get('c', 'cd')
-    if column == 'bt':  # bet scores
-        topics = sorted(list(topics), key=lambda t: t.bet_score(), reverse={
-            'asc': False, 'desc': True}.get(order, True))
-    else:
-        order_by = {'asc': '', 'desc': '-'}.get(order, '-') + {
-            'cd': 'created_date',
-            'dd': 'deadline',
-            'ed': 'event_close_date'
-        }.get(column, 'created_date')
-        topics = topics.order_by(order_by)
-
     context = {
-        'form': form,
-        'topics': topics,
-        'o': {'asc': 'desc', 'desc': 'asc'}.get(order, 'desc'),
-        'c': column,
-        'arrow': {'asc': '&uarr;', 'desc': '&darr;'}.get(order, '&darr;'),
+        'form': search_form(request),
     }
     return render(request, 'core/search.html', context)
+
+
+@csrf_exempt
+def search_form(request):
+    form = SearchForm(request)
+    if form.is_valid():
+        form.search()
+    return form
 
 
 def dumpdata(request):
@@ -165,10 +149,12 @@ def profile_info(request):
 
 @login_required
 def profile_topics(request):
+    status = request.REQUEST.get('status', 'pending')
+    template_name = 'profile/topics/%s.html' % status
     context = {
-        'submitted_topics': [],
+        'form': search_form(request),
     }
-    return render(request, 'profile/profile_topics.html', context)
+    return render(request, template_name, context)
 
 
 @login_required

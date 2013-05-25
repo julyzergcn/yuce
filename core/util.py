@@ -200,13 +200,32 @@ def submitter_profit_from_topic(topic):
 
 
 def reject_topic(topic):
-    '''from pending to rejected status'''
+    '''give back scores(submitted & betted score) to the topic submitter'''
     submitter = topic.user
     cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
     super_user = get_super_user()
+    score_user = get_score_user()
     with transaction.commit_on_success():
         submitter.score += cost
         submitter.save(update_fields=['score'])
         super_user.score -= cost
         super_user.save(update_fields=['score'])
-    return cost
+        for bet in models.get_model('core', 'Bet').objects.filter(topic=topic):
+            assert bet.user == submitter, 'bet user should be submitter'
+            bet_score = bet.score
+            submitter.score += bet_score
+            submitter.save(update_fields=['score'])
+            score_user.score -= bet_score
+            score_user.save(update_fields=['score'])
+
+
+def cancel_topic(topic):
+    '''give back score to the betted users'''
+    for bet in models.get_model('core', 'Bet').objects.filter(topic=topic):
+        bet_score = bet.score
+        bet_user = bet.user
+        with transaction.commit_on_success():
+            bet_user.score += bet_score
+            bet_user.save(update_fields=['score'])
+            score_user.score -= bet_score
+            score_user.save(update_fields=['score'])
