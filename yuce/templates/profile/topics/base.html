@@ -1,11 +1,34 @@
 {% extends 'profile/base.html' %}
+{% load i18n %}
+{% load bootstrap %}
+
+{% block profile_content %}
+<form method="get" action="">
+    {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">&times;</a>
+            {% for non_field_error in form.non_field_errors %}
+                 {{ non_field_error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+  <div class="row-fluid search-topics">
+    <div class="span5">{{ form.keywords|bootstrap }}</div>
+    <div class="span5">{{ form.category|bootstrap }}</div>
+    <div class="span2"><label>&nbsp;</label><input type="submit" value="{% trans 'Search' %}" class="btn btn-primary" /></div>
+  </div>
+    <input type="hidden" name="status" value="{{ form.data.status }}" />
+    <input type="hidden" name="my" />
+</form>
+{% endblock %}
+
 
 {% block extra_js %}
 {{ block.super }}
 
 <script type="text/javascript">
 $(function(){
-    $('#my_topics_btn').click();
+    $('.toggle_btn:first').click();
 });
 </script>
 {% endblock %}

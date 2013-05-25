@@ -1,0 +1,30 @@
+{% extends 'profile/base.html' %}
+{% load i18n %}
+
+
+{% block profile_content %}
+<form method="get" action="">
+  <div class="row-fluid search-topics">
+    <div class="span5">
+        <div class="control-group">
+            <label for="id_keywords" class="control-label">{% trans 'Search' %}</label>
+            <div class="controls">
+                <input type="text" name="kw" id="id_keywords">
+            </div>
+        </div>
+    </div>
+    <div class="span7"><label>&nbsp;</label><input type="submit" value="{% trans 'Search' %}" class="btn btn-primary" /></div>
+  </div>
+</form>
+{% endblock %}
+
+
+{% block extra_js %}
+{{ block.super }}
+
+<script type="text/javascript">
+$(function(){
+    $('.toggle_btn:last').click();
+});
+</script>
+{% endblock %}

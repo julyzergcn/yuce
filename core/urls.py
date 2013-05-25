@@ -19,6 +19,12 @@ urlpatterns = patterns(
     url(r'^accounts/profile/topics/$', 'profile_topics',
         name='profile_topics'),
 
-    url(r'^accounts/profile/bets/$', 'profile_bets', name='profile_bets'),
+    url(r'^accounts/profile/bets/open/$', 'profile_bets_open',
+        name='profile_bets_open'),
+    url(r'^accounts/profile/bets/closed/$', 'profile_bets_closed',
+        name='profile_bets_closed'),
+    url(r'^accounts/profile/bets/completed/$', 'profile_bets_completed',
+        name='profile_bets_completed'),
+
     url(r'^accounts/profile/score/$', 'profile_score', name='profile_score'),
 )

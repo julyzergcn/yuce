@@ -192,7 +192,7 @@ class Topic(models.Model):
     def submitter_profit(self):
         if self.status == 'completed':
             profit = submitter_profit_from_topic(self)
-            return '%.2f' % profit
+            return float('%.2f' % profit)
         return 0
 
     def yes_bets_score(self):
@@ -219,3 +219,11 @@ class Bet(models.Model):
 
     def __unicode__(self):
         return u'%s %s %s %s' % (self.user, self.topic, self.yesno, self.score)
+
+    def weight_all(self):
+        return self.weight * self.score
+
+    def pay_back_score(self):
+        if self.topic.status=='completed' and self.yesno==self.topic.yesno:
+            return self.profit + self.score
+        return 0

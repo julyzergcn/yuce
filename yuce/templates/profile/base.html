@@ -8,7 +8,7 @@
 .affix {top:60px; width:160px}
 .affix-top {margin-top:30px}
 .mt30 {margin-top: 30px}
-#my_topics li a {padding-left: 30px}
+#my_topics li a, #my_bets li a {padding-left: 30px}
 </style>
 {% endblock %}
 
@@ -21,7 +21,7 @@
         <ul class="nav nav-list profile-menu">
             <li><a href="{% url 'profile_info' %}#change_email">{% trans 'Change Email' %}</a></li>
             <li><a href="{% url 'profile_info' %}#change_password">{% trans 'Change Password' %}</a></li>
-            <li><a href="#my_topics" data-toggle="collapse" id="my_topics_btn">{% trans 'My Topics' %} <span>+</span><span style="display:none">-</span></a></li>
+            <li><a href="#my_topics" data-toggle="collapse" class="toggle_btn">{% trans 'My Topics' %} <span>+</span><span style="display:none">-</span></a></li>
                 <div id="my_topics" class="nav nav-list profile-menu collapse">
                     <li><a href="{% url 'profile_topics' %}?status=pending&category=all&my=">{% trans 'Pending' %}</a></a></li>
                     <li><a href="{% url 'profile_topics' %}?status=rejected&category=all&my=">{% trans 'Rejected' %}</a></li>
@@ -30,13 +30,19 @@
                     <li><a href="{% url 'profile_topics' %}?status=deadline&category=all&my=">{% trans 'Deadline' %}</a></li>
                     <li><a href="{% url 'profile_topics' %}?status=completed&category=all&my=">{% trans 'Completed' %}</a></li>
                 </div>
-            <li><a href="{% url 'profile_bets' %}">{% trans 'My Bets' %}</a></li>
+            <li><a href="#my_bets" data-toggle="collapse" class="toggle_btn">{% trans 'My Bets' %} <span>+</span><span style="display:none">-</span></a></li>
+                <div id="my_bets" class="nav nav-list profile-menu collapse">
+                    <li><a href="{% url 'profile_bets_open' %}">{% trans 'Open' %}</a></li>
+                    <li><a href="{% url 'profile_bets_closed' %}">{% trans 'Bet closed' %}</a></li>
+                    <li><a href="{% url 'profile_bets_completed' %}">{% trans 'Topic completed' %}</a></li>
+                </div>
             <li><a href="{% url 'profile_score' %}">{% trans 'My Score' %}</a></li>
         </ul>
     </div>
 </div>
 
-<div class="span9">
+<div class="span9" style="padding-top:30px">
+
     {% block profile_content %}{% endblock %}
 </div>
 
@@ -48,8 +54,8 @@
 {% block extra_js %}
 <script type="text/javascript">
 $(function(){
-    $('#my_topics_btn').click(function(){
-        $('#my_topics_btn span').toggle();
+    $('.toggle_btn').click(function(){
+        $(this).find('span').toggle();
     });
 });
 </script>

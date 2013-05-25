@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from core.models import Topic, Bet, User
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
@@ -157,9 +158,36 @@ def profile_topics(request):
     return render(request, template_name, context)
 
 
-@login_required
 def profile_bets(request):
-    pass
+    query = Q()
+    if request.REQUEST.get('kw'):
+        for kw in request.REQUEST['kw'].strip().split():
+            query |= Q(topic__subject__icontains=kw)
+            query |= Q(topic__subject_english__icontains=kw)
+            query |= Q(topic__content__icontains=kw)
+            query |= Q(topic__content_english__icontains=kw)
+            query |= Q(topic__id=kw)
+            query |= Q(id=kw)
+    query &= Q(user=request.user)
+    return Bet.objects.filter(query).order_by('-id')
+
+
+@login_required
+def profile_bets_open(request):
+    bets = profile_bets(request).filter(topic__status='open')
+    return render(request, 'profile/bets/open.html', {'bets': bets})
+
+
+@login_required
+def profile_bets_closed(request):
+    bets = profile_bets(request).filter(topic__status='deadline')
+    return render(request, 'profile/bets/deadline.html', {'bets': bets})
+
+
+@login_required
+def profile_bets_completed(request):
+    bets = profile_bets(request).filter(topic__status='completed')
+    return render(request, 'profile/bets/completed.html', {'bets': bets})
 
 
 @login_required

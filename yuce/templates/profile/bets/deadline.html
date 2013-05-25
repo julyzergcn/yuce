@@ -1,0 +1,39 @@
+{% extends 'profile/bets/base.html' %}
+{% load i18n %}
+
+{% block profile_content %}
+{{ block.super }}
+    <div id="my_bets" class="mt30">
+        <h4>{% trans 'My Bets' %}: {% trans 'Bet closed' %}</h4>
+        <div>
+        <table class="table">
+        {% if bets %}
+            <tr>
+                <th>ID</th>
+                <th>{% trans 'Subject' %}</th>
+                <th>{% trans 'Created date' %}</th>
+                <th>{% trans 'Yes/No' %}</th>
+                <th>{% trans 'Score' %}</th>
+                <th>{% trans 'Weight' %}</th>
+                <th>{% trans 'Deadline' %}</th>
+            </tr>
+        {% else %}
+            {% trans 'No results' %}
+        {% endif %}
+        {% for bet in bets %}
+            <tr>
+                <td><a href="#">{{ bet.id }}</a></td>
+                <td><a href="{{ bet.topic.get_absolute_url }}">{{ bet.topic.subject }}</a></td>
+                <td>{{ bet.created_date }}</td>
+                <td><img src="{% if bet.yesno %}{{ STATIC_URL }}admin/img/icon-yes.gif{% else %}{{ STATIC_URL }}admin/img/icon-no.gif{% endif %}"></td>
+                <td>{{ bet.score }}</td>
+                <td>{{ bet.weight_all }}</td>
+                <td>{{ bet.topic.deadline }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    </div>
+
+{% endblock %}
+
