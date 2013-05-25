@@ -250,7 +250,8 @@ class SearchForm(forms.Form):
             query |= Q(subject_english__icontains=kw)
             query |= Q(content__icontains=kw)
             query |= Q(content_english__icontains=kw)
-            query |= Q(id=kw)
+            if kw.isdigit():
+                query |= Q(id=kw)
 
         category = data.get('category', 'all')
         if category != 'all':

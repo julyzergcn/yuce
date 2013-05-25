@@ -166,8 +166,9 @@ def profile_bets(request):
             query |= Q(topic__subject_english__icontains=kw)
             query |= Q(topic__content__icontains=kw)
             query |= Q(topic__content_english__icontains=kw)
-            query |= Q(topic__id=kw)
-            query |= Q(id=kw)
+            if kw.isdigit():
+                query |= Q(topic__id=kw)
+                query |= Q(id=kw)
     query &= Q(user=request.user)
     return Bet.objects.filter(query).order_by('-id')
 
