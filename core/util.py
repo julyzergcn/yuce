@@ -24,7 +24,7 @@ def get_score_user():
 
 def get_current_weight(topic):
     if timezone.now() > topic.deadline:
-        # if time is over deadline, the weight should be zero
+        # if the time is over deadline, the weight should be zero
         return 0
     start_weight = getattr(settings, 'TOPIC_START_WEIGHT', 100000)
     end_weight = topic.end_weight
@@ -32,8 +32,8 @@ def get_current_weight(topic):
     time_delta2 = minutes_delta(topic.deadline - topic.created_date)
     if time_delta2 == 0:
         time_delta2 = 1
-    current_weight = (start_weight - end_weight) * (time_delta1 * 1.0 /
-                                                    time_delta2 + end_weight)
+    current_weight = (start_weight - end_weight) * (
+        time_delta1 * 1.0 / time_delta2) + end_weight
     return int(current_weight)
 
 
