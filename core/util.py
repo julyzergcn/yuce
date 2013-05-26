@@ -22,13 +22,15 @@ def get_score_user():
     return models.get_model('core', 'User').score_user()
 
 
-def get_current_weight(topic):
-    if timezone.now() > topic.deadline:
+def get_current_weight(topic, now=None):
+    if now is None:
+        now = timezone.now()
+    if now > topic.deadline:
         # if the time is over deadline, the weight should be zero
         return 0
     start_weight = getattr(settings, 'TOPIC_START_WEIGHT', 100000)
     end_weight = topic.end_weight
-    time_delta1 = minutes_delta(topic.deadline - timezone.now())
+    time_delta1 = minutes_delta(topic.deadline - now)
     time_delta2 = minutes_delta(topic.deadline - topic.created_date)
     if time_delta2 == 0:
         time_delta2 = 1
@@ -324,6 +326,27 @@ def cancel_topic(topic):
             score_user.save(update_fields=['score'])
 
 
-# TODO: regenerate weight
 def change_deadline(topic):
-    pass
+    for bet in topic.bet_set.all():
+        bet.weight = get_current_weight(topic, now=bet.created_date)
+        bet.save(update_fields=['weight'])
+
+        if bet.weight == 0:
+            with transaction.commit_on_success():
+                bet_score = bet.score
+                bet_user = bet.user
+                bet_user.score += bet_score
+                bet_user.save(update_fields=['score'])
+
+                models.get_model('core', 'Activity')(
+                    user=bet_user,
+                    action = 'bet deadline is changed',
+                    content_type=ContentType.objects.get_by_natural_key(
+                        'core', 'bet'),
+                    object_id=bet.id,
+                    score=bet_score,
+                ).save()
+
+                score_user = get_score_user()
+                score_user.score -= bet_score
+                score_user.save(update_fields=['score'])

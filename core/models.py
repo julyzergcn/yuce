@@ -59,6 +59,7 @@ ACTIONS = (
     ('submitter win', _('submitter win')),
     ('topic is completed', _('topic is completed')),
     ('bet is completed', _('bet is completed')),
+    ('bet deadline is changed', _('bet deadline is changed')),
 )
 
 
