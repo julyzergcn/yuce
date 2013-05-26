@@ -1,5 +1,6 @@
 {% extends 'profile/base.html' %}
 {% load i18n %}
+{% load endless %}
 
 
 {% block profile_content %}
@@ -18,6 +19,8 @@
         {% else %}
             {% trans 'No results' %}
         {% endif %}
+
+        {% paginate 10 activities %}
         {% for act in activities %}
             <tr>
                 <td>{{ act.action_date }}</td>
@@ -28,6 +31,8 @@
             </tr>
         {% endfor %}
         </table>
+
+        {% show_pages %}
         </div>
     </div>
 {% endblock %}
