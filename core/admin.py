@@ -9,7 +9,8 @@ from django import forms
 
 from core.models import User, Activity, Tag, Topic, Bet
 from core.forms import UserCreationForm, UserChangeForm, MyBooleanField
-from core.util import divide_profit, reject_topic, cancel_topic
+from core.util import (
+    divide_profit, reject_topic, cancel_topic, change_deadline)
 
 
 class UserAdmin(AuthUserAdmin):
@@ -34,7 +35,8 @@ target_field.short_description = _('target')
 
 admin.site.register(
     Activity,
-    list_display=('action_date', 'user', 'action', 'text', target_field),
+    list_display=('action_date', 'user', 'action', 'text', target_field,
+                  'score'),
     list_filter=('action', )
 )
 
@@ -151,6 +153,8 @@ class TopicAdmin(admin.ModelAdmin):
             topic = Topic.objects.get(id=obj.id)
             original_status = topic.status
             new_status = obj.status
+            original_deadline = topic.deadline
+            new_deadline = obj.deadline
             if new_status != original_status:
                 if original_status == 'pending' and new_status == 'open':
                     action = 'approve topic'
@@ -172,6 +176,9 @@ class TopicAdmin(admin.ModelAdmin):
                 action = 'close topic'
                 # give divided profit to joined users
                 divide_profit(obj)
+            elif original_deadline != new_deadline:
+                action = 'change deadline'
+                change_deadline(obj)
 
             Activity(
                 user=request.user,

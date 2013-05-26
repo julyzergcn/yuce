@@ -8,7 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
-from core.models import Topic, Bet, User
+from core.models import Topic, Bet, User, Activity
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
 from core.util import can_post_topic, can_view_topic
 
@@ -193,4 +193,9 @@ def profile_bets_completed(request):
 
 @login_required
 def profile_score(request):
-    pass
+    activities = Activity.objects.filter(user=request.user).exclude(score=0)
+    activities = activities.order_by('-action_date')
+    context = {
+        'activities': activities,
+    }
+    return render(request, 'profile/score.html', context)

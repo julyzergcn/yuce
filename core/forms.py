@@ -117,13 +117,7 @@ class TopicCreationForm(forms.Form):
             end_weight=data['end_weight'],
         )
         topic.save()
-        pay_topic_post(request.user)
-        Activity(
-            user=request.user,
-            action='submit topic',
-            content_type=ContentType.objects.get_for_model(Topic),
-            object_id=topic.id,
-        ).save()
+        pay_topic_post(topic)
 
         for tag in data['tags']:
             topic.tags.add(tag)
@@ -137,15 +131,7 @@ class TopicCreationForm(forms.Form):
                 yesno=data['yesno'],
             )
             bet.save()
-            pay_bet(request.user, bet.score)
-            Activity(
-                user=request.user,
-                action='bet',
-                content_type=ContentType.objects.get_for_model(Topic),
-                object_id=topic.id,
-                text=('yes' if data['yesno'] else 'no') + ' ' +
-                str(data['score'])
-            ).save()
+            pay_bet(bet)
 
         return topic
 
@@ -180,16 +166,7 @@ class BetForm(forms.Form):
             yesno=data['yesno'],
         )
         bet.save()
-        pay_bet(request.user, bet.score)
-
-        Activity(
-            user=request.user,
-            action='bet',
-            content_type=ContentType.objects.get_for_model(Topic),
-            object_id=topic.id,
-            text=('yes' if data['yesno'] else 'no') + ' ' +
-            str(data['score'])
-        ).save()
+        pay_bet(bet)
 
 
 class SearchForm(forms.Form):

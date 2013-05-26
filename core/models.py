@@ -42,13 +42,23 @@ ACTIONS = (
     ('deposit', _('deposit')),
     ('withdraw', _('withdraw')),
 
-    # below are for admin user only
+    # for admins
     ('approve topic', _('approve topic')),
     ('reject topic', _('reject topic')),
     ('close topic', _('close topic')),
     ('cancel topic', _('cancel topic')),
+    ('change deadline', _('change deadline')),
     ('modify topic', _('modify topic')),
     ('modify user', _('modify user')),
+
+    # for users
+    ('topic is rejected', _('topic is rejected')),
+    ('bet is rejected', _('bet is rejected')),
+    ('topic is cancelled', _('topic is cancelled')),
+    ('bet is cancelled', _('bet is cancelled')),
+    ('submitter win', _('submitter win')),
+    ('topic is completed', _('topic is completed')),
+    ('bet is completed', _('bet is completed')),
 )
 
 
@@ -62,6 +72,10 @@ class Activity(models.Model):
     target = generic.GenericForeignKey('content_type', 'object_id')
 
     text = models.CharField(max_length=200, blank=True)
+    score = models.DecimalField(_('score'), max_digits=20, decimal_places=8,
+                                default=0)
+    current_score = models.DecimalField(_('score'), max_digits=20,
+                                decimal_places=8, default=0)
 
     class Meta:
         verbose_name_plural = _('Activities')
@@ -71,6 +85,11 @@ class Activity(models.Model):
                                    self.user,
                                    _(self.action),
                                    self.target or self.text)
+
+    def save(self, **kwargs):
+        if self.score != 0:
+            self.current_score = self.user.score
+        super(Activity, self).save(**kwargs)
 
 
 def on_user_login(sender, request, user, **kwargs):
@@ -218,7 +237,8 @@ class Bet(models.Model):
                                  default=0)
 
     def __unicode__(self):
-        return u'%s %s %s %s' % (self.user, self.topic, self.yesno, self.score)
+        return u'%s(%s%s)' % (self.topic, ('Y' if self.yesno else 'N'),
+                    self.score)
 
     def weight_all(self):
         return self.weight * self.score

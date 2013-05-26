@@ -1,0 +1,33 @@
+{% extends 'profile/base.html' %}
+{% load i18n %}
+
+
+{% block profile_content %}
+<div id="my_score" class="mt30">
+        <h4>{% trans 'My score' %}</h4>
+        <div>
+        <table class="table">
+        {% if activities %}
+            <tr>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Action' %}</th>
+                <th>{% trans 'Target' %}</th>
+                <th>{% trans 'Score' %}</th>
+                <th>{% trans 'Current score' %}</th>
+            </tr>
+        {% else %}
+            {% trans 'No results' %}
+        {% endif %}
+        {% for act in activities %}
+            <tr>
+                <td>{{ act.action_date }}</td>
+                <td>{{ act.action }}</td>
+                <td><a href="{{ act.target.get_absolute_url }}">{{ act.target }}</a></td>
+                <td>{{ act.score }}</td>
+                <td>{{ act.current_score }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    </div>
+{% endblock %}
