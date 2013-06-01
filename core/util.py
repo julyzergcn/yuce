@@ -103,6 +103,15 @@ def can_bet(user, topic=None, bet_score=None):
         can, reason = topic.can_bet()
         if not can:
             return False, reason
+    
+    max_bet_score = getattr(settings, 'TOPIC_MAX_BET_SCORE', 10)
+    bets = models.get_model('core', 'Bet').objects.filter(topic=topic, user=user)
+    old_bets_score = sum(bets.values_list('score', flat=True))
+    left_bet_score = max_bet_score - old_bets_score
+    if left_bet_score <= 0:
+        return False, _('Cannot bet more')
+    if bet_score > left_bet_score:
+        return False, _('No more than %s to bet') % left_bet_score
     return True, ''
 
 

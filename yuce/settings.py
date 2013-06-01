@@ -10,6 +10,10 @@ TOPIC_START_WEIGHT = 10**5
 TOPIC_END_WEIGHT = 10**4
 TOPIC_POST_COST = 10
 TOPIC_EVENT_CLOSED_EMAILS = []
+
+# max bet score per topic, in one or more times
+TOPIC_MAX_BET_SCORE = 10
+
 # when topic is completed, divide the profit to site and the topic submitter
 SITE_WIN_RATE = 0.1
 SUBMITTER_WIN_RATE = 0.1
