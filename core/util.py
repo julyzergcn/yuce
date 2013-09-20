@@ -82,6 +82,8 @@ def pay_topic_post(topic):
             super_user.score += cost
             super_user.save(update_fields=['score'])
 
+            user.bitcoin_pay(amount=cost, to=super_user.username)
+            
             models.get_model('core', 'Activity')(
                 user=user,
                 action = 'submit topic',
@@ -94,7 +96,7 @@ def pay_topic_post(topic):
     return 0
 
 
-def can_bet(user, topic=None, bet_score=None):
+def can_bet(user, topic=None, bet_score=None, yesno=None):
     if user.is_staff:
         return False, _('Admin cannot bet')
     if bet_score and user.score < bet_score:
@@ -105,7 +107,10 @@ def can_bet(user, topic=None, bet_score=None):
             return False, reason
     
     max_bet_score = getattr(settings, 'TOPIC_MAX_BET_SCORE', 10)
-    bets = models.get_model('core', 'Bet').objects.filter(topic=topic, user=user)
+    if yesno is None:
+        bets = models.get_model('core', 'Bet').objects.filter(topic=topic, user=user)
+    else:
+        bets = models.get_model('core', 'Bet').objects.filter(topic=topic, user=user, yesno=yesno)
     old_bets_score = sum(bets.values_list('score', flat=True))
     left_bet_score = max_bet_score - old_bets_score
     if left_bet_score <= 0:
@@ -120,13 +125,15 @@ def pay_bet(bet):
     bet_score = bet.score
     if user.score > bet_score:
         with transaction.commit_on_success():
-            user.score -= bet_score
-            user.save(update_fields=['score'])
+            #~ user.score -= bet_score
+            #~ user.save(update_fields=['score'])
 
             score_user = get_score_user()
             score_user.score += bet_score
             score_user.save(update_fields=['score'])
 
+            user.bitcoin_pay(amount=bet_score, to=score_user.username)
+            
             models.get_model('core', 'Activity')(
                 user=user,
                 action = 'bet',
@@ -193,6 +200,7 @@ def divide_profit(topic):
     topic_submitted_cost = getattr(settings, 'TOPIC_SUBMITTED_COST', 10)
     submitter.score += topic_submitted_cost
     submitter.save(update_fields=['score'])
+    
     models.get_model('core', 'Activity')(
         user=submitter,
         action = 'topic is completed',
@@ -204,6 +212,8 @@ def divide_profit(topic):
     # site(super user)
     super_user = get_super_user()
     super_user.score -= topic_submitted_cost
+    
+    super_user.bitcoin_pay(amount=topic_submitted_cost, to=submitter.username)
 
     site_win_rate = Decimal(getattr(settings, 'SITE_WIN_RATE', 0.1))
     site_profit = lose_bets_score * site_win_rate
@@ -214,6 +224,9 @@ def divide_profit(topic):
     score_user = get_score_user()
     score_user.score -= submitter_profit
     score_user.score -= site_profit
+    
+    score_user.bitcoin_pay(amount=submitter_profit, to=submitter.username)
+    score_user.bitcoin_pay(amount=site_profit, to=super_user.username)
 
     # all winners profit
     all_profit = lose_bets_score - submitter_profit - site_profit
@@ -225,6 +238,9 @@ def divide_profit(topic):
         winner.score += bet.profit
         winner.score += bet.score
         winner.save(update_fields=['score'])
+        
+        score_user.bitcoin_pay(amount=bet.profit+bet.score, to=winner.username)
+        
         models.get_model('core', 'Activity')(
             user=winner,
             action = 'bet is completed',

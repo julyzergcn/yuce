@@ -1,5 +1,14 @@
 #coding=utf-8
 
+BITCOIN_SERVER_ADDR = 'localhost:8333'
+BITCOIN_SERVER_USER = 'ee'
+BITCOIN_SERVER_PASS = 'ee33'
+
+BITCOIN_SERVER_URL = 'http://%s:%s@%s' % (BITCOIN_SERVER_USER, BITCOIN_SERVER_PASS, BITCOIN_SERVER_ADDR)
+
+BITCOIN_WITHDRAW = True   # can withdraw
+#~ BITCOIN_WITHDRAW = False   # cannot withdraw
+
 import djcelery
 djcelery.setup_loader()
 
@@ -11,8 +20,11 @@ TOPIC_END_WEIGHT = 10**4
 TOPIC_POST_COST = 10
 TOPIC_EVENT_CLOSED_EMAILS = []
 
+import decimal
+TOPIC_SUBMITTED_COST = decimal.Decimal(0.0000001)
+
 # max bet score per topic, in one or more times
-TOPIC_MAX_BET_SCORE = 10
+TOPIC_MAX_BET_SCORE = 1
 
 # when topic is completed, divide the profit to site and the topic submitter
 SITE_WIN_RATE = 0.1

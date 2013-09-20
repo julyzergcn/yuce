@@ -1,11 +1,13 @@
-Django
-South
+Django==1.5.1
+South==0.8.1
 Pillow
 django-endless-pagination
 django-extensions
 django-bootstrap-form
 django-simple-captcha
 django-celery
+bunch==1.0.1
+python-jsonrpc==0.3.4
 
 dj-database-url
 django-reset

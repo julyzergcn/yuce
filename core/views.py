@@ -1,5 +1,7 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django import http
+from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,7 @@ from django.core.serializers import serialize
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.views.decorators.cache import never_cache
 
 from core.models import Topic, Bet, User, Activity
 from core.forms import BetForm, TopicCreationForm, SearchForm, EmailChangeForm
@@ -199,3 +202,21 @@ def profile_score(request):
         'activities': activities,
     }
     return render(request, 'profile/score.html', context)
+
+@login_required
+@never_cache
+def profile_bitcoin(request):
+    can_withdraw = settings.BITCOIN_WITHDRAW
+    
+    if request.method == 'POST':
+        withdraw_addr = request.POST.get('withdraw_addr', '')
+        if can_withdraw and withdraw_addr:
+            results = request.user.bitcoin_withdraw(withdraw_addr)
+            if results['error']:
+                messages.error(request, results['error']['message'])
+        return redirect(request.get_full_path())
+    
+    context = {
+        'can_withdraw': can_withdraw,
+    }
+    return render(request, 'profile/bitcoin.html', context)

@@ -15,6 +15,7 @@ from core.util import (
 
 class UserAdmin(AuthUserAdmin):
     list_display = AuthUserAdmin.list_display + ('score', )
+    fieldsets = AuthUserAdmin.fieldsets + ((None, {'fields': ('score',)}),)
     form = UserChangeForm
     add_form = UserCreationForm
 

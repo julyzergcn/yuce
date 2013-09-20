@@ -1,3 +1,6 @@
+
+import decimal
+from jsonrpc.proxy import ServiceProxy
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.signals import user_logged_in
@@ -31,6 +34,34 @@ class User(AbstractUser):
             return cls.objects.get(id=2)
         except ObjectDoesNotExist:
             raise ImproperlyConfigured(_('Need at least one score user(id=2).'))
+    
+    def bitcoin_address(self, username=None):
+        s = ServiceProxy(settings.BITCOIN_SERVER_URL)
+        lst = s.getaddressesbyaccount(username or self.username)['result']
+        if lst: return lst[0]
+        return s.getnewaddress(self.username)['result']
+    
+    def bitcoin_balance(self, username=None):
+        s = ServiceProxy(settings.BITCOIN_SERVER_URL)
+        balance = s.getbalance(username or self.username)['result']
+        
+        # force set score == balance
+        if username is None:
+            self.score = balance
+            self.save(update_fields=['score'])
+        
+        return balance
+    
+    def bitcoin_pay(self, amount=0.0, frm=None, to=None):
+        s = ServiceProxy(settings.BITCOIN_SERVER_URL)
+        to_address = self.bitcoin_address(to)
+        if isinstance(amount, decimal.Decimal):
+            amount = float(amount)
+        return s.sendfrom(frm or self.username, to_address, amount)['result']
+    
+    def bitcoin_withdraw(self, addr):
+        s = ServiceProxy(settings.BITCOIN_SERVER_URL)
+        return s.sendfrom(self.username, addr, self.bitcoin_balance())
 
 ACTIONS = (
     ('login', _('login')),

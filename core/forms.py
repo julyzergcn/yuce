@@ -97,7 +97,7 @@ class TopicCreationForm(forms.Form):
                 _('Event close date should be after deadline'))
 
         if self.request and data.get('yesno') and data.get('score'):
-            can, reason = can_bet(self.request.user, bet_score=data['score'])
+            can, reason = can_bet(self.request.user, bet_score=data['score'], yesno=data['yesno'])
             if not can:
                 raise forms.ValidationError(reason)
 
@@ -149,7 +149,7 @@ class BetForm(forms.Form):
         data = self.cleaned_data
         if self.request:
             can, reason = can_bet(self.request.user, self.topic,
-                                  data.get('score'))
+                                  data.get('score'), yesno=data.get('yesno'))
             if not can:
                 raise forms.ValidationError(reason)
 

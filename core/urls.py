@@ -27,4 +27,5 @@ urlpatterns = patterns(
         name='profile_bets_completed'),
 
     url(r'^accounts/profile/score/$', 'profile_score', name='profile_score'),
+    url(r'^accounts/profile/bitcoin/$', 'profile_bitcoin', name='profile_bitcoin'),
 )

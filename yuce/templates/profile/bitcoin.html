@@ -1,0 +1,25 @@
+{% extends 'profile/base.html' %}
+{% load i18n %}
+
+{% block profile_content %}
+<div id="my_score" class="mt30">
+    <h4>{% trans 'My bitcoin' %}</h4>
+    <p>{% trans 'My bitcoin deposit address' %}: <span style="background-color:#ddd">{{ user.bitcoin_address }}</span></p>
+    <p>{% trans 'My bitcoin balance' %}: {{ user.bitcoin_balance }}</p>
+    
+    {% if can_withdraw %}
+    <p>{% trans 'To withdraw bitcoin, please input your address and press Withdraw button' %}</p>
+    
+    <div>
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="text" name="withdraw_addr" style="margin-bottom:0" />
+        <input type="submit" class="btn" value="Withdraw" />
+    </form>
+    </div>
+    {% else %}
+        <p>{% trans 'Withdraw not allowed temporarily' %}</p>
+    {% endif %}
+    
+</div>
+{% endblock %}
