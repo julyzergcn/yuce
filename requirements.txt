@@ -8,6 +8,7 @@ django-simple-captcha
 django-celery
 bunch==1.0.1
 python-jsonrpc==0.3.4
+django-json-rpc
 
 dj-database-url
 django-reset
